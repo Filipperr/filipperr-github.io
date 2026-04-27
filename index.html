@@ -22,7 +22,7 @@
       --wa-blue: #53bdeb;
       --wa-yellow: #f8d14a;
 
-      /* WhatsApp wallpaper-ish tokens */
+
       --wa-app-bg: #0b141a;
       --wa-chat-bg: #0b141a;
       --wa-wallpaper-ink: rgba(233, 237, 239, 0.055);
@@ -52,6 +52,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 10px var(--accent-color);
       border: 1px solid rgba(0, 255, 136, 0.2);
       width: min(520px, 92vw);
+      display: none;
     }
 
     h2 {
@@ -125,10 +126,11 @@
 
     .ylapalkki {
       background: rgba(21, 25, 28, 0.95);
-      padding: 18px 20px;
+      padding: calc(54px + env(safe-area-inset-top, 0px)) 20px 18px;
+      min-height: calc(118px + env(safe-area-inset-top, 0px));
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
       gap: 14px;
@@ -136,9 +138,19 @@
 
     .ylapalkki .left, .ylapalkki .right {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 12px;
       flex-wrap: wrap;
+    }
+
+    .chat-brand {
+      display: block;
+      width: 100%;
+      color: var(--accent-color);
+      font-weight: 950;
+      letter-spacing: 1px;
+      font-size: 20px;
+      line-height: 1.1;
     }
 
     #kaveriValinta {
@@ -593,12 +605,248 @@
       color: var(--text-dim);
       line-height: 1.4;
     }
+
+    /* Landing + separate apps */
+    .app-screen {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(900px 520px at 15% 10%, rgba(0,168,132,0.14), transparent 55%),
+        radial-gradient(900px 520px at 85% 90%, rgba(83,189,235,0.10), transparent 55%),
+        var(--wa-app-bg);
+      color: var(--text-main);
+      display: none;
+      overflow: hidden;
+    }
+
+    #homeScreen {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .home-card {
+      width: min(960px, 94vw);
+      padding: 34px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(17,27,33,0.86);
+      box-shadow: 0 28px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,168,132,0.10) inset;
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+
+    .home-title {
+      font-size: clamp(34px, 7vw, 72px);
+      letter-spacing: -2px;
+      line-height: 0.95;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .home-title span { color: var(--wa-green); }
+
+    .home-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .home-choice, .app-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      color: var(--text-main);
+      border-radius: 22px;
+      padding: 22px;
+      cursor: pointer;
+      transition: 0.18s ease;
+      text-align: left;
+    }
+
+    .home-choice:hover, .app-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0,168,132,0.45);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.30);
+    }
+
+    .choice-icon { font-size: 34px; margin-bottom: 14px; display: block; }
+    .choice-title { font-size: 22px; font-weight: 950; margin-bottom: 8px; }
+    .choice-sub { color: var(--text-dim); font-size: 14px; line-height: 1.45; }
+
+    .app-shell {
+      display: none;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      background: var(--wa-app-bg);
+    }
+
+    .app-header {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      background: rgba(17,27,33,0.98);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-main {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .app-sidebar {
+      width: 320px;
+      padding: 14px;
+      border-right: 1px solid var(--border);
+      overflow: auto;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      background: rgba(17,27,33,0.98);
+    }
+
+    .app-content {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px;
+    }
+
+    #standaloneGameMount {
+      min-height: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #standaloneGameMount #gamePane {
+      display: flex;
+      padding: 0;
+      height: 100%;
+    }
+
+    .school-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .school-stage {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .quiz-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      background: rgba(17,27,33,0.82);
+      padding: 22px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.30);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .quiz-option {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .quiz-option.correct { border-color: rgba(0,168,132,0.9); background: rgba(0,168,132,0.18); }
+    .quiz-option.wrong { border-color: rgba(255,75,75,0.8); background: rgba(255,75,75,0.14); }
+
+    @media (max-width: 760px) {
+      .home-grid { grid-template-columns: 1fr; }
+      .app-main { flex-direction: column; }
+      .app-sidebar { width: 100%; max-height: 240px; border-right: none; border-bottom: 1px solid var(--border); }
+    }
   </style>
 </head>
 <body>
+  <div id="homeScreen" class="app-screen">
+    <div class="home-card">
+      <div class="home-title">Filiperrr <span>Hub</span></div>
+      <p class="dim">Valitse mitä haluat tehdä.</p>
+      <div class="home-grid">
+        <button type="button" class="home-choice" id="homeSchoolBtn">
+          <span class="choice-icon">📚</span>
+          <div class="choice-title">Koulu</div>
+          <div class="choice-sub">1-6 luokan tietovisat matematiikasta, kielistä ja muista aineista.</div>
+        </button>
+        <button type="button" class="home-choice" id="homeGamesBtn">
+          <span class="choice-icon">🎮</span>
+          <div class="choice-title">Pelit</div>
+          <div class="choice-sub">Snake, Geometry runner, Brawl shooter, Block Blast ja Asteroids.</div>
+        </button>
+        <button type="button" class="home-choice" id="homeChatBtn">
+          <span class="choice-icon">💬</span>
+          <div class="choice-title">Viestittely</div>
+          <div class="choice-sub">Avaa Filiperrr chats ja keskustele kavereiden kanssa.</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gamesApp" class="app-shell">
+    <div class="app-header">
+      <div>
+        <h2 style="margin:0;">Pelit</h2>
+        <div class="dim small">Valitse peli vasemmalta ja paina Käynnistä.</div>
+      </div>
+      <button type="button" class="secondary-btn" id="gamesBackBtn">Takaisin</button>
+    </div>
+    <div class="app-main">
+      <div class="app-sidebar" id="standaloneGameList"></div>
+      <div class="app-content">
+        <div id="standaloneGameMount"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="schoolApp" class="app-shell">
+    <div class="app-header">
+      <div>
+        <h2 style="margin:0;">Koulu</h2>
+        <div class="dim small">Valitse luokka, aine ja vaikeustaso. Jokaisessa visassa on 20 kysymystä.</div>
+      </div>
+      <button type="button" class="secondary-btn" id="schoolBackBtn">Takaisin</button>
+    </div>
+    <div class="app-main">
+      <div class="app-sidebar">
+        <div class="dim small">Luokka</div>
+        <div id="gradeList" class="school-grid"></div>
+        <div class="dim small">Aine</div>
+        <div id="subjectList" class="school-grid"></div>
+        <div class="dim small">Vaikeus</div>
+        <div id="difficultyList" class="school-grid"></div>
+      </div>
+      <div class="app-content">
+        <div class="school-stage" id="schoolStage"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="kirjautuminen">
     <h2>Filiperrr chats</h2>
     <p class="dim" style="margin-bottom: 12px;">Tunnistautuminen</p>
+    <button type="button" class="secondary-btn" id="loginBackBtn" style="margin-bottom: 14px;">Takaisin alkuun</button>
 
     <div class="create-box" style="margin-top: 8px;">
       <div class="dim small">Kirjaudu sisään</div>
@@ -607,7 +855,11 @@
         <input id="loginCode" type="password" placeholder="Koodi" maxlength="32" style="width: min(220px, 100%);" />
         <button class="login-btn" id="loginBtn" style="min-width: 140px;">Kirjaudu</button>
       </div>
-      <div class="dim small">Koodi on paikallinen (vain tässä selaimessa).</div>
+      <div class="row" style="width: 100%;">
+        <input id="apiBase" type="text" placeholder="API URL (esim. https://sun-serveri.onrender.com)" style="width: min(520px, 100%);" />
+        <button class="login-btn" id="apiSaveBtn" style="min-width: 140px;">Tallenna</button>
+      </div>
+      <div class="dim small">Jos haluat kaverit toimimaan puhelin↔kone, molemmissa pitää olla sama API URL.</div>
     </div>
 
     <div class="create-box">
@@ -635,6 +887,9 @@
     <div class="ylapalkki">
       <div class="left">
         <div>
+          <span class="chat-brand">Filiperrr chats</span>
+        </div>
+        <div>
           <span class="dim">Käyttäjä:</span>
           <span id="omaNimi" style="color: var(--accent-color); font-weight: bold;"></span>
         </div>
@@ -643,6 +898,7 @@
       </div>
 
       <div class="right">
+        <button class="danger-btn" id="chatBackBtn" title="Takaisin alkuun">TAKAISIN</button>
         <button class="danger-btn" id="tyhjennaBtn" title="Tyhjennä keskustelu">TYHJENNÄ</button>
         <button class="danger-btn" id="ulosBtn">POISTU</button>
       </div>
@@ -653,7 +909,7 @@
       <button type="button" class="tab-btn" id="tabGroups">Ryhmät</button>
       <button type="button" class="tab-btn" id="tabChannels">Channels</button>
       <button type="button" class="tab-btn" id="tabStatus">Status</button>
-      <button type="button" class="tab-btn" id="tabGames">Pelit</button>
+      <button type="button" class="tab-btn" id="tabGames" style="display:none;">Pelit</button>
     </div>
 
     <div id="content">
@@ -935,6 +1191,34 @@
       el.addEventListener(event, handler);
     }
 
+    // --- Optional backend for cross-device sync ---
+    const LS_API_BASE = "ledchat.apiBase.v1";
+    function getApiBase() {
+      const v = String(localStorage.getItem(LS_API_BASE) || "").trim();
+      return v.replace(/\/+$/, "");
+    }
+    function setApiBase(v) {
+      const clean = String(v || "").trim().replace(/\/+$/, "");
+      if (!clean) localStorage.removeItem(LS_API_BASE);
+      else localStorage.setItem(LS_API_BASE, clean);
+      return clean;
+    }
+    async function apiFetch(path, options = {}) {
+      const base = getApiBase();
+      if (!base) throw new Error("api_not_configured");
+      const res = await fetch(base + path, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.ok === false) {
+        const err = new Error(data?.error || "api_error");
+        err.status = res.status;
+        throw err;
+      }
+      return data;
+    }
+
     // Storage keys
     const LS_USERS = "ledchat.users.v1";
     const LS_SESSION = "ledchat.session.v1";
@@ -959,6 +1243,9 @@
     const loginUserEl = document.getElementById("loginUser");
     const loginCodeEl = document.getElementById("loginCode");
     const loginBtnEl = document.getElementById("loginBtn");
+    const loginBackBtnEl = document.getElementById("loginBackBtn");
+    const apiBaseEl = document.getElementById("apiBase");
+    const apiSaveBtnEl = document.getElementById("apiSaveBtn");
     const uusiNimiEl = document.getElementById("uusiNimi");
     const uusiKoodiEl = document.getElementById("uusiKoodi");
     const uusiBtnEl = document.getElementById("uusiBtn");
@@ -988,6 +1275,7 @@
     const tekstikenttaEl = document.getElementById("tekstikentta");
     const lahetaBtnEl = document.getElementById("lahetaBtn");
     const ulosBtnEl = document.getElementById("ulosBtn");
+    const chatBackBtnEl = document.getElementById("chatBackBtn");
     const tyhjennaBtnEl = document.getElementById("tyhjennaBtn");
     const friendModalEl = document.getElementById("friendModal");
     const friendCloseBtnEl = document.getElementById("friendCloseBtn");
@@ -1036,9 +1324,64 @@
     const drawSizeEl = document.getElementById("drawSize");
     const drawClearBtnEl = document.getElementById("drawClearBtn");
     const drawSendBtnEl = document.getElementById("drawSendBtn");
+    const homeScreenEl = document.getElementById("homeScreen");
+    const homeSchoolBtnEl = document.getElementById("homeSchoolBtn");
+    const homeGamesBtnEl = document.getElementById("homeGamesBtn");
+    const homeChatBtnEl = document.getElementById("homeChatBtn");
+    const gamesAppEl = document.getElementById("gamesApp");
+    const gamesBackBtnEl = document.getElementById("gamesBackBtn");
+    const standaloneGameListEl = document.getElementById("standaloneGameList");
+    const standaloneGameMountEl = document.getElementById("standaloneGameMount");
+    const schoolAppEl = document.getElementById("schoolApp");
+    const schoolBackBtnEl = document.getElementById("schoolBackBtn");
+    const gradeListEl = document.getElementById("gradeList");
+    const subjectListEl = document.getElementById("subjectList");
+    const difficultyListEl = document.getElementById("difficultyList");
+    const schoolStageEl = document.getElementById("schoolStage");
 
     let pendingStickerDataUrl = "";
     let pendingStatusStickerDataUrl = "";
+    let selectedGrade = 1;
+    let selectedSubject = "matematiikka";
+    let selectedDifficulty = "easy";
+    let quizState = null;
+
+    function hideAllMainViews() {
+      if (homeScreenEl) homeScreenEl.style.display = "none";
+      if (kirjautuminenEl) kirjautuminenEl.style.display = "none";
+      if (sovellusEl) sovellusEl.style.display = "none";
+      if (gamesAppEl) gamesAppEl.style.display = "none";
+      if (schoolAppEl) schoolAppEl.style.display = "none";
+    }
+
+    function showHome() {
+      stopGame();
+      hideAllMainViews();
+      homeScreenEl.style.display = "grid";
+    }
+
+    function showChatEntry() {
+      hideAllMainViews();
+      showLogin();
+    }
+
+    function showGamesHome() {
+      hideAllMainViews();
+      gamesAppEl.style.display = "flex";
+      standaloneGameMountEl.appendChild(gamePaneEl);
+      gamePaneEl.style.display = "flex";
+      activeTab = "games";
+      renderStandaloneGameList();
+      updateGameHeader();
+    }
+
+    function showSchoolHome() {
+      stopGame();
+      hideAllMainViews();
+      schoolAppEl.style.display = "flex";
+      renderSchoolSelectors();
+      renderSchoolIntro();
+    }
 
     // Hard-ensure poll/draw buttons are clickable immediately
     if (pollBtnEl) {
@@ -1351,11 +1694,53 @@
         snake: {
           title: "Snake",
           hint: "Ohjaus: Nuolinäppäimet · Syö ruoka · Älä osu seiniin tai itseesi."
+        },
+        block: {
+          title: "Block Blast",
+          hint: "Ohjaus: klikkaa ruutua · Täytä rivejä tai sarakkeita · uusi pala tulee automaattisesti."
+        },
+        asteroids: {
+          title: "Asteroids",
+          hint: "Ohjaus: ↑ kiihdytä · ←/→ käänny · Space ammu · hajota asteroidit."
         }
       };
       const info = map[activeGameKey] || map.brawl;
       gameTitleEl.textContent = info.title;
       gameHintEl.textContent = info.hint;
+    }
+
+    function gameDefinitions() {
+      return [
+        { key: "snake", name: "Käärmepeli", sub: "Nuolinäppäimet" },
+        { key: "gdash", name: "Geometry Dash runner", sub: "Space / ↑ hyppy, P pause" },
+        { key: "brawl", name: "Brawl Stars shooter", sub: "WASD + hiiri/Space" },
+        { key: "block", name: "Block Blast", sub: "Klikkaa ruutua ja täytä rivejä" },
+        { key: "asteroids", name: "Asteroids", sub: "↑, ←/→, Space" },
+      ];
+    }
+
+    function renderStandaloneGameList() {
+      if (!standaloneGameListEl) return;
+      standaloneGameListEl.innerHTML = "";
+      gameDefinitions().forEach((g) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "list-item" + (activeGameKey === g.key ? " active" : "");
+        item.innerHTML = `<div style="display:flex;align-items:center;gap:10px;min-width:0;">
+            <div class="avatar">🎮</div>
+            <div style="min-width:0;">
+              <div class="title">${g.name}</div>
+              <div class="subtitle">${g.sub}</div>
+            </div>
+          </div><div class="dim small">›</div>`;
+        item.addEventListener("click", () => {
+          activeGameKey = g.key;
+          renderStandaloneGameList();
+          updateGameHeader();
+          if (gameRunning) startGame();
+        });
+        standaloneGameListEl.appendChild(item);
+      });
     }
 
     function sizeGameCanvas() {
@@ -1384,6 +1769,8 @@
       if (activeGameKey === "snake") snakeReset();
       if (activeGameKey === "gdash") gdReset();
       if (activeGameKey === "brawl") brawlReset();
+      if (activeGameKey === "block") blockReset();
+      if (activeGameKey === "asteroids") astReset();
       gameLast = performance.now();
       gameLoop(gameLast);
     }
@@ -1397,6 +1784,7 @@
       if (activeTab !== "games") return;
       if (activeGameKey === "gdash" && (e.key === " " || e.key === "ArrowUp")) e.preventDefault();
       if (activeGameKey === "snake" && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "asteroids" && ["ArrowUp","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
     });
     safeOn(window, "keyup", (e) => keys.delete(e.key));
 
@@ -1419,6 +1807,8 @@
       if (activeGameKey === "snake") snakeUpdate(ctx, w, h, dt);
       if (activeGameKey === "gdash") gdUpdate(ctx, w, h, dt);
       if (activeGameKey === "brawl") brawlUpdate(ctx, w, h, dt);
+      if (activeGameKey === "block") blockUpdate(ctx, w, h, dt);
+      if (activeGameKey === "asteroids") astUpdate(ctx, w, h, dt);
 
       gameRAF = requestAnimationFrame(gameLoop);
     }
@@ -1944,6 +2334,386 @@
       hud(ctx, [`Shooter`, `Score: ${Math.floor(br.score)}`, `HP: ${p.hp}`], "#00a884");
     }
 
+    // -------- Block Blast --------
+    let bl = {};
+    function blockReset() {
+      bl = { n: 8, grid: [], piece: null, score: 0, over: false };
+      for (let y = 0; y < bl.n; y++) bl.grid.push(Array(bl.n).fill(0));
+      blockNewPiece();
+    }
+    function blockNewPiece() {
+      const pieces = [
+        [[1]], [[1,1]], [[1],[1]], [[1,1,1]], [[1],[1],[1]],
+        [[1,1],[1,1]], [[1,0],[1,1]], [[0,1],[1,1]], [[1,1,1],[0,1,0]]
+      ];
+      const shape = pieces[Math.floor(Math.random() * pieces.length)];
+      bl.piece = { shape, color: ["#00a884", "#53bdeb", "#f8d14a"][Math.floor(Math.random() * 3)] };
+    }
+    function blockCanPlace(cx, cy) {
+      const s = bl.piece.shape;
+      for (let y = 0; y < s.length; y++) for (let x = 0; x < s[y].length; x++) {
+        if (!s[y][x]) continue;
+        const gx = cx + x, gy = cy + y;
+        if (gx < 0 || gy < 0 || gx >= bl.n || gy >= bl.n || bl.grid[gy][gx]) return false;
+      }
+      return true;
+    }
+    function blockHasMove() {
+      for (let y = 0; y < bl.n; y++) for (let x = 0; x < bl.n; x++) if (blockCanPlace(x, y)) return true;
+      return false;
+    }
+    function blockClearLines() {
+      let cleared = 0;
+      for (let y = 0; y < bl.n; y++) {
+        if (bl.grid[y].every(Boolean)) { bl.grid[y] = Array(bl.n).fill(0); cleared++; }
+      }
+      for (let x = 0; x < bl.n; x++) {
+        let full = true;
+        for (let y = 0; y < bl.n; y++) if (!bl.grid[y][x]) full = false;
+        if (full) { for (let y = 0; y < bl.n; y++) bl.grid[y][x] = 0; cleared++; }
+      }
+      if (cleared) bl.score += cleared * 10 + cleared * cleared * 5;
+    }
+    function blockPlaceAt(px, py, w, h) {
+      if (bl.over) return;
+      const size = Math.min(w, h - 120) * 0.72;
+      const cell = size / bl.n;
+      const ox = (w - size) / 2;
+      const oy = 78;
+      const gx = Math.floor((px - ox) / cell);
+      const gy = Math.floor((py - oy) / cell);
+      if (!blockCanPlace(gx, gy)) return;
+      bl.piece.shape.forEach((row, y) => row.forEach((v, x) => { if (v) bl.grid[gy + y][gx + x] = bl.piece.color; }));
+      bl.score += bl.piece.shape.flat().filter(Boolean).length;
+      blockClearLines();
+      blockNewPiece();
+      if (!blockHasMove()) bl.over = true;
+    }
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      if (activeGameKey !== "block") return;
+      const rect = gameCanvasEl.getBoundingClientRect();
+      blockPlaceAt(e.clientX - rect.left, e.clientY - rect.top, rect.width, rect.height);
+    });
+    function blockUpdate(ctx, w, h) {
+      if (!bl.grid || !bl.piece) blockReset();
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      ctx.fillRect(0, 0, w, h);
+      bgGrid(ctx, w, h, 0.035);
+      const size = Math.min(w, h - 120) * 0.72;
+      const cell = size / bl.n;
+      const ox = (w - size) / 2;
+      const oy = 78;
+      for (let y = 0; y < bl.n; y++) for (let x = 0; x < bl.n; x++) {
+        const px = ox + x * cell, py = oy + y * cell;
+        ctx.fillStyle = bl.grid[y][x] || "rgba(255,255,255,0.045)";
+        rr(ctx, px + 3, py + 3, cell - 6, cell - 6, 8);
+        ctx.fill();
+      }
+      const ps = bl.piece.shape;
+      const previewX = 20, previewY = h - 105, pCell = 26;
+      ctx.fillStyle = "rgba(17,27,33,0.80)";
+      rr(ctx, previewX - 10, previewY - 12, 170, 92, 16); ctx.fill();
+      ctx.fillStyle = "#e9edef";
+      ctx.font = "800 13px system-ui";
+      ctx.fillText("Seuraava pala", previewX, previewY - 20);
+      ps.forEach((row, y) => row.forEach((v, x) => {
+        if (!v) return;
+        ctx.fillStyle = bl.piece.color;
+        rr(ctx, previewX + x * pCell, previewY + y * pCell, pCell - 4, pCell - 4, 6); ctx.fill();
+      }));
+      hud(ctx, ["Block Blast", `Score: ${bl.score}`], "#f8d14a");
+      if (bl.over) {
+        ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#e9edef"; ctx.font = "900 28px system-ui"; ctx.fillText("Ei enää siirtoja", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // -------- Asteroids --------
+    let ast = {};
+    function astReset() {
+      ast = { ship: { x: 300, y: 240, a: -Math.PI/2, vx: 0, vy: 0 }, bullets: [], rocks: [], score: 0, cd: 0, dead: false };
+      for (let i = 0; i < 7; i++) ast.rocks.push(astRock(900, 520, 2));
+    }
+    function astRock(w, h, size = 2, x = Math.random() * w, y = Math.random() * h) {
+      const r = size === 2 ? 34 : size === 1 ? 22 : 13;
+      const a = Math.random() * Math.PI * 2;
+      return { x, y, r, size, vx: Math.cos(a) * (35 + Math.random() * 55), vy: Math.sin(a) * (35 + Math.random() * 55) };
+    }
+    function wrap(o, w, h) {
+      if (o.x < -40) o.x = w + 40; if (o.x > w + 40) o.x = -40;
+      if (o.y < -40) o.y = h + 40; if (o.y > h + 40) o.y = -40;
+    }
+    function astUpdate(ctx, w, h, dt) {
+      if (!ast.ship) astReset();
+      ctx.fillStyle = "rgba(0,0,0,0.28)"; ctx.fillRect(0, 0, w, h); bgGrid(ctx, w, h, 0.025);
+      if (!ast.dead) {
+        const s = ast.ship;
+        if (keys.has("ArrowLeft")) s.a -= 4.2 * dt;
+        if (keys.has("ArrowRight")) s.a += 4.2 * dt;
+        if (keys.has("ArrowUp")) { s.vx += Math.cos(s.a) * 260 * dt; s.vy += Math.sin(s.a) * 260 * dt; }
+        s.x += s.vx * dt; s.y += s.vy * dt; s.vx *= 0.992; s.vy *= 0.992; wrap(s, w, h);
+        ast.cd = Math.max(0, ast.cd - dt);
+        if (keys.has(" ") && ast.cd <= 0) {
+          ast.bullets.push({ x: s.x, y: s.y, vx: Math.cos(s.a) * 520, vy: Math.sin(s.a) * 520, life: 1.1 });
+          ast.cd = 0.18;
+        }
+      }
+      ast.bullets.forEach(b => { b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; wrap(b, w, h); });
+      ast.bullets = ast.bullets.filter(b => b.life > 0);
+      ast.rocks.forEach(r => { r.x += r.vx * dt; r.y += r.vy * dt; wrap(r, w, h); });
+      for (const b of ast.bullets) for (const r of ast.rocks) {
+        if (Math.hypot(b.x - r.x, b.y - r.y) < r.r) { b.life = -1; r.hit = true; ast.score += 10; }
+      }
+      const newRocks = [];
+      ast.rocks.forEach(r => {
+        if (!r.hit) { newRocks.push(r); return; }
+        if (r.size > 0) { newRocks.push(astRock(w, h, r.size - 1, r.x, r.y)); newRocks.push(astRock(w, h, r.size - 1, r.x, r.y)); }
+      });
+      ast.rocks = newRocks;
+      if (ast.rocks.length === 0) for (let i = 0; i < 7; i++) ast.rocks.push(astRock(w, h, 2));
+      if (!ast.dead) {
+        for (const r of ast.rocks) if (Math.hypot(ast.ship.x - r.x, ast.ship.y - r.y) < r.r + 12) ast.dead = true;
+      }
+      // draw
+      ast.rocks.forEach(r => {
+        ctx.strokeStyle = "rgba(233,237,239,0.55)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2); ctx.stroke();
+      });
+      ctx.fillStyle = "#e9edef";
+      ast.bullets.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, 3, 0, Math.PI * 2); ctx.fill(); });
+      if (!ast.dead) {
+        const s = ast.ship; ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.a);
+        ctx.strokeStyle = "#00a884"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(-14, -10); ctx.lineTo(-10, 0); ctx.lineTo(-14, 10); ctx.closePath(); ctx.stroke(); ctx.restore();
+      }
+      hud(ctx, ["Asteroids", `Score: ${ast.score}`, `Rocks: ${ast.rocks.length}`], "#53bdeb");
+      if (ast.dead) {
+        ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#e9edef"; ctx.font = "900 28px system-ui"; ctx.fillText("Ship destroyed", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // ----------------------------
+    // School quiz generator
+    // ----------------------------
+    const allSubjects = [
+      { key: "matematiikka", label: "Matematiikka", min: 1 },
+      { key: "suomenkieli", label: "Suomen kieli", min: 1 },
+      { key: "ymparistooppi", label: "Ympäristöoppi", min: 1 },
+      { key: "historia", label: "Historia", min: 5 },
+      { key: "englanti", label: "Englanti", min: 1 },
+      { key: "espanja", label: "Espanja", min: 3 },
+    ];
+
+    function subjectsForGrade(grade) {
+      return allSubjects.filter((s) => grade >= s.min);
+    }
+
+    function renderSchoolSelectors() {
+      gradeListEl.innerHTML = "";
+      subjectListEl.innerHTML = "";
+      difficultyListEl.innerHTML = "";
+
+      for (let g = 1; g <= 6; g++) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "secondary-btn";
+        b.textContent = `${g}. luokka`;
+        if (g === selectedGrade) b.style.borderColor = "rgba(0,168,132,0.65)";
+        b.addEventListener("click", () => {
+          selectedGrade = g;
+          const allowed = subjectsForGrade(g).map((s) => s.key);
+          if (!allowed.includes(selectedSubject)) selectedSubject = allowed[0];
+          renderSchoolSelectors();
+          renderSchoolIntro();
+        });
+        gradeListEl.appendChild(b);
+      }
+
+      subjectsForGrade(selectedGrade).forEach((s) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "secondary-btn";
+        b.textContent = s.label;
+        if (s.key === selectedSubject) b.style.borderColor = "rgba(0,168,132,0.65)";
+        b.addEventListener("click", () => {
+          selectedSubject = s.key;
+          renderSchoolSelectors();
+          renderSchoolIntro();
+        });
+        subjectListEl.appendChild(b);
+      });
+
+      [
+        ["easy", "Easy"],
+        ["medium", "Medium"],
+        ["hard", "Hard"],
+      ].forEach(([key, label]) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "secondary-btn";
+        b.textContent = label;
+        if (key === selectedDifficulty) b.style.borderColor = "rgba(0,168,132,0.65)";
+        b.addEventListener("click", () => {
+          selectedDifficulty = key;
+          renderSchoolSelectors();
+          renderSchoolIntro();
+        });
+        difficultyListEl.appendChild(b);
+      });
+    }
+
+    function renderSchoolIntro() {
+      const subj = allSubjects.find((s) => s.key === selectedSubject)?.label || selectedSubject;
+      schoolStageEl.innerHTML = `
+        <div class="quiz-card">
+          <h2 style="margin-bottom:8px;">${selectedGrade}. luokka · ${subj}</h2>
+          <p class="dim">Vaikeus: ${selectedDifficulty}. Visassa on 20 kysymystä.</p>
+          <div style="margin-top:18px;">
+            <button type="button" class="primary-btn" id="startQuizBtn">Aloita tietovisa</button>
+          </div>
+        </div>`;
+      document.getElementById("startQuizBtn").addEventListener("click", startSchoolQuiz);
+    }
+
+    function choiceQuestion(q, correct, wrongs) {
+      const options = [correct, ...wrongs].map(String);
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+      return { q, correct: String(correct), options };
+    }
+
+    function makeMathQ(grade, diff, i) {
+      const scale = diff === "easy" ? 8 : diff === "medium" ? 20 : 60;
+      const a = 1 + ((i * 3 + grade) % scale);
+      const b = 1 + ((i * 5 + grade * 2) % scale);
+      const mode = diff === "hard" ? i % 4 : i % 3;
+      if (mode === 0) return choiceQuestion(`${a} + ${b} = ?`, a + b, [a + b + 1, Math.max(0, a + b - 2), a + b + 5]);
+      if (mode === 1) return choiceQuestion(`${a + b} - ${a} = ?`, b, [a, b + 2, Math.max(0, b - 1)]);
+      if (mode === 2) return choiceQuestion(`${Math.max(2, grade + 1)} × ${1 + (i % 10)} = ?`, Math.max(2, grade + 1) * (1 + (i % 10)), [12, 18, 24].map(x => x + i % 4));
+      const divisor = 2 + (i % 8);
+      return choiceQuestion(`${divisor * (grade + i % 6 + 1)} ÷ ${divisor} = ?`, grade + i % 6 + 1, [grade + 1, grade + 3, grade + 5]);
+    }
+
+    const wordBank = {
+      suomenkieli: [
+        ["substantiivi", "sana, joka nimeää asian tai esineen"],
+        ["verbi", "tekemistä tai olemista kuvaava sana"],
+        ["adjektiivi", "sana, joka kuvailee millainen jokin on"],
+        ["virke", "alkaa isolla kirjaimella ja päättyy pisteeseen"],
+      ],
+      ymparistooppi: [
+        ["aurinko", "tähti, joka antaa valoa ja lämpöä"],
+        ["ravintoketju", "kertoo kuka syö kenet luonnossa"],
+        ["kierrätys", "materiaalin käyttäminen uudelleen"],
+        ["veden kierto", "haihtuminen, tiivistyminen ja sade"],
+      ],
+      historia: [
+        ["kivikausi", "aika, jolloin työkalut tehtiin usein kivestä"],
+        ["keskiaika", "historiallinen aikakausi ennen uutta aikaa"],
+        ["lähde", "asia, josta tutkija saa tietoa menneestä"],
+        ["itsenäisyys", "maa päättää omista asioistaan"],
+      ],
+      englanti: [
+        ["cat", "kissa"], ["dog", "koira"], ["school", "koulu"], ["friend", "ystävä"], ["green", "vihreä"], ["water", "vesi"]
+      ],
+      espanja: [
+        ["hola", "hei"], ["gracias", "kiitos"], ["uno", "yksi"], ["dos", "kaksi"], ["agua", "vesi"], ["amigo", "ystävä"]
+      ]
+    };
+
+    function makeWordQ(subject, grade, diff, i) {
+      const bank = wordBank[subject] || wordBank.suomenkieli;
+      const item = bank[i % bank.length];
+      const prompt = (subject === "englanti" || subject === "espanja")
+        ? `Mitä "${item[0]}" tarkoittaa suomeksi?`
+        : `Mikä sopii käsitteeseen "${item[0]}"?`;
+      const wrongs = bank.filter((x) => x[1] !== item[1]).slice(0, 3).map((x) => x[1]);
+      while (wrongs.length < 3) wrongs.push(`vaihtoehto ${wrongs.length + grade + i}`);
+      if (diff === "hard" && subject !== "englanti" && subject !== "espanja") {
+        return choiceQuestion(`Mikä käsite tarkoittaa: "${item[1]}"?`, item[0], bank.filter((x) => x[0] !== item[0]).slice(0, 3).map((x) => x[0]));
+      }
+      return choiceQuestion(prompt, item[1], wrongs);
+    }
+
+    function buildQuiz(grade, subject, diff) {
+      const qs = [];
+      for (let i = 0; i < 20; i++) {
+        qs.push(subject === "matematiikka" ? makeMathQ(grade, diff, i) : makeWordQ(subject, grade, diff, i));
+      }
+      return qs;
+    }
+
+    function startSchoolQuiz() {
+      quizState = {
+        questions: buildQuiz(selectedGrade, selectedSubject, selectedDifficulty),
+        idx: 0,
+        score: 0,
+        answered: false
+      };
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const st = quizState;
+      const q = st.questions[st.idx];
+      schoolStageEl.innerHTML = `
+        <div class="quiz-card">
+          <div class="dim small">Kysymys ${st.idx + 1} / ${st.questions.length} · pisteet ${st.score}</div>
+          <h2 style="margin:12px 0;">${q.q}</h2>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div style="margin-top:18px;">
+            <button type="button" class="primary-btn" id="quizNextBtn" disabled>Seuraava</button>
+          </div>
+        </div>`;
+      const opts = document.getElementById("quizOptions");
+      q.options.forEach((opt) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "quiz-option";
+        b.textContent = opt;
+        b.addEventListener("click", () => answerQuiz(opt, b));
+        opts.appendChild(b);
+      });
+      document.getElementById("quizNextBtn").addEventListener("click", nextQuiz);
+    }
+
+    function answerQuiz(answer, btn) {
+      if (!quizState || quizState.answered) return;
+      const q = quizState.questions[quizState.idx];
+      quizState.answered = true;
+      if (answer === q.correct) {
+        quizState.score++;
+        btn.classList.add("correct");
+      } else {
+        btn.classList.add("wrong");
+        Array.from(document.querySelectorAll(".quiz-option")).forEach((b) => {
+          if (b.textContent === q.correct) b.classList.add("correct");
+        });
+      }
+      document.getElementById("quizNextBtn").disabled = false;
+    }
+
+    function nextQuiz() {
+      quizState.idx++;
+      quizState.answered = false;
+      if (quizState.idx >= quizState.questions.length) {
+        schoolStageEl.innerHTML = `
+          <div class="quiz-card">
+            <h2>Valmis!</h2>
+            <p class="dim">Sait ${quizState.score} / ${quizState.questions.length} oikein.</p>
+            <div style="margin-top:18px;">
+              <button type="button" class="primary-btn" id="againQuizBtn">Pelaa uudelleen</button>
+            </div>
+          </div>`;
+        document.getElementById("againQuizBtn").addEventListener("click", startSchoolQuiz);
+        return;
+      }
+      renderQuizQuestion();
+    }
+
     function nowTime() {
       return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     }
@@ -1991,6 +2761,12 @@
 
     function saveUsers(users) {
       localStorage.setItem(LS_USERS, JSON.stringify(users));
+    }
+
+    async function apiListUsers() {
+      const data = await apiFetch("/api/users");
+      const users = Array.isArray(data.users) ? data.users : [];
+      return users.map((u) => normalizeName(u.name)).filter(Boolean);
     }
 
     function rid() {
@@ -2127,16 +2903,26 @@
       localStorage.setItem(channelPostKey(channelId), JSON.stringify(posts));
     }
 
-    function renderLoginUsers() {
-      const users = loadUsers();
+    async function renderLoginUsers() {
       loginUserEl.innerHTML = "";
-      users.forEach((u) => {
+      const base = getApiBase();
+      let names = [];
+      if (base) {
+        try {
+          names = await apiListUsers();
+        } catch {
+          names = loadUsers().map((u) => u.name);
+        }
+      } else {
+        names = loadUsers().map((u) => u.name);
+      }
+      names.forEach((name) => {
         const opt = document.createElement("option");
-        opt.value = u.name;
-        opt.textContent = u.name;
+        opt.value = name;
+        opt.textContent = name;
         loginUserEl.appendChild(opt);
       });
-      loginBtnEl.disabled = users.length === 0;
+      loginBtnEl.disabled = names.length === 0;
     }
 
     function renderFriendSelect() {
@@ -2191,8 +2977,12 @@
     function showLogin() {
       sovellusEl.style.display = "none";
       kirjautuminenEl.style.display = "block";
+      // hydrate API URL field
+      if (apiBaseEl) apiBaseEl.value = getApiBase();
       renderLoginUsers();
     }
+
+    let sessionCode = ""; // keep in-memory for backend calls
 
     function kirjaudu(nimi) {
       kukaOlen = nimi;
@@ -2468,7 +3258,7 @@
       }
     }
 
-    function createUser() {
+    async function createUser() {
       const name = normalizeName(uusiNimiEl.value);
       const code = normalizeCode(uusiKoodiEl.value);
       if (!name || !code) {
@@ -2480,18 +3270,33 @@
         return;
       }
 
+      const base = getApiBase();
+      if (base) {
+        try {
+          await apiFetch("/api/register", { method: "POST", body: JSON.stringify({ name, code }) });
+          uusiNimiEl.value = "";
+          uusiKoodiEl.value = "";
+          await renderLoginUsers();
+          alert("Käyttäjä luotu serverille.");
+          return;
+        } catch (e) {
+          if (e?.message === "user_exists") alert("Käyttäjä on jo olemassa.");
+          else alert("Serveri ei vastaa / virhe käyttäjän luomisessa.");
+          return;
+        }
+      }
+
       const users = loadUsers();
       if (users.some((u) => u.name.toLowerCase() === name.toLowerCase())) {
         alert("Käyttäjä on jo olemassa.");
         return;
       }
-
       users.push({ name, code, friends: [] });
       users.sort((a, b) => a.name.localeCompare(b.name, "fi"));
       saveUsers(users);
       uusiNimiEl.value = "";
       uusiKoodiEl.value = "";
-      renderLoginUsers();
+      await renderLoginUsers();
     }
 
     function clearConversation() {
@@ -2733,12 +3538,7 @@
       }
 
       if (activeTab === "games") {
-        const games = [
-          { key: "brawl", name: "Brawl mini-shooter", sub: "WASD + hiiri/Space" },
-          { key: "gdash", name: "Geometry runner", sub: "Space / ↑ hyppy" },
-          { key: "snake", name: "Snake", sub: "Nuolinäppäimet" },
-        ];
-        games.forEach((g) => {
+        gameDefinitions().forEach((g) => {
           const item = document.createElement("div");
           item.className = "list-item" + (activeGameKey === g.key ? " active" : "");
           item.innerHTML = `<div style="display:flex;align-items:center;gap:10px;min-width:0;">
@@ -2793,19 +3593,40 @@
     }
 
     // Wire up events
-    loginBtnEl.addEventListener("click", () => {
+    loginBtnEl.addEventListener("click", async () => {
       const name = loginUserEl.value;
       const code = loginCodeEl.value;
       if (!name) return;
-      if (!verifyUserCode(name, code)) {
-        alert("Väärä koodi.");
-        return;
+      const base = getApiBase();
+      if (base) {
+        try {
+          await apiFetch("/api/login", { method: "POST", body: JSON.stringify({ name, code }) });
+          sessionCode = normalizeCode(code);
+          loginCodeEl.value = "";
+          kirjaudu(name);
+          return;
+        } catch {
+          alert("Väärä koodi tai käyttäjää ei löydy serveriltä.");
+          return;
+        }
+      } else {
+        if (!verifyUserCode(name, code)) {
+          alert("Väärä koodi.");
+          return;
+        }
+        sessionCode = normalizeCode(code);
+        loginCodeEl.value = "";
+        kirjaudu(name);
       }
-      loginCodeEl.value = "";
-      kirjaudu(name);
     });
 
     safeOn(resetBtnEl, "click", resetAllLocalData);
+    safeOn(apiSaveBtnEl, "click", async () => {
+      const v = setApiBase(apiBaseEl.value);
+      apiBaseEl.value = v;
+      await renderLoginUsers();
+      alert(v ? "API URL tallennettu." : "API URL poistettu.");
+    });
 
     loginCodeEl.addEventListener("keydown", (e) => {
       if (e.key === "Enter") loginBtnEl.click();
@@ -2824,6 +3645,13 @@
     tabChannelsEl.addEventListener("click", () => setActiveTab("channels"));
     tabStatusEl.addEventListener("click", () => setActiveTab("status"));
     tabGamesEl.addEventListener("click", () => setActiveTab("games"));
+    safeOn(homeSchoolBtnEl, "click", showSchoolHome);
+    safeOn(homeGamesBtnEl, "click", showGamesHome);
+    safeOn(homeChatBtnEl, "click", showChatEntry);
+    safeOn(gamesBackBtnEl, "click", showHome);
+    safeOn(schoolBackBtnEl, "click", showHome);
+    safeOn(loginBackBtnEl, "click", showHome);
+    safeOn(chatBackBtnEl, "click", showHome);
 
     emojiToggleBtnEl.addEventListener("click", toggleEmoji);
     lahetaBtnEl.addEventListener("click", lahetaViesti);
@@ -2998,7 +3826,7 @@
       renderSidebarList();
     }
 
-    function addFriend() {
+    async function addFriend() {
       const me = getUserByName(kukaOlen);
       if (!me) return;
 
@@ -3008,6 +3836,28 @@
       if (fn.toLowerCase() === kukaOlen.toLowerCase()) {
         alert("Et voi lisätä itseäsi.");
         return;
+      }
+
+      const base = getApiBase();
+      if (base) {
+        try {
+          await apiFetch("/api/friends/add", {
+            method: "POST",
+            body: JSON.stringify({
+              me: kukaOlen,
+              meCode: sessionCode,
+              friendName: fn,
+              friendCode: fc
+            })
+          });
+          closeFriendModal();
+          renderFriendSelect();
+          paivitaNaytto();
+          return;
+        } catch {
+          alert("Kaveria ei löytynyt tai koodi on väärä (server).");
+          return;
+        }
       }
 
       const friend = getUserByName(fn);
@@ -3141,10 +3991,12 @@
       snakeReset();
       gdReset();
       brawlReset();
+      blockReset();
+      astReset();
       const ses = loadSession();
       const u = ses?.name ? getUserByName(ses.name) : null;
       if (u) loginUserEl.value = u.name;
-      showLogin();
+      showHome();
     })();
   </script>
 </body>
