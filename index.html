@@ -6,7 +6,6 @@
   <title>Modern LED Chat</title>
   <style>
     :root {
-      /* WhatsApp Web (dark-ish) inspired */
       --bg-color: #0b141a;
       --panel-color: #111b21;
       --panel-2: #202c33;
@@ -22,8 +21,11 @@
       --wa-blue: #53bdeb;
       --wa-yellow: #f8d14a;
 
-
-      --wa-app-bg: #0b141a;
+      --light-bg:
+        radial-gradient(900px 520px at 15% 10%, rgba(255,255,255,0.72), transparent 58%),
+        radial-gradient(800px 520px at 85% 85%, rgba(173,231,255,0.48), transparent 58%),
+        linear-gradient(135deg, #fff7d6 0%, #e4f8ff 48%, #f3e7ff 100%);
+      --wa-app-bg: #f2fbff;
       --wa-chat-bg: #0b141a;
       --wa-wallpaper-ink: rgba(233, 237, 239, 0.055);
       --wa-wallpaper-ink-2: rgba(0, 168, 132, 0.05);
@@ -33,10 +35,8 @@
 
     body {
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(900px 520px at 15% 10%, rgba(0,168,132,0.10), transparent 55%),
-        radial-gradient(900px 520px at 85% 90%, rgba(83,189,235,0.08), transparent 55%),
-        var(--wa-app-bg);
+      background: var(--light-bg);
+      background-attachment: fixed;
       color: var(--text-main);
       display: flex;
       justify-content: center;
@@ -46,6 +46,8 @@
 
     #kirjautuminen {
       background: var(--panel-color);
+      position: relative;
+      z-index: 1;
       padding: 36px;
       border-radius: 20px;
       text-align: center;
@@ -583,9 +585,38 @@
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(17,27,33,0.92);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 12px 34px rgba(0,0,0,0.22);
     }
 
     .game-title { font-weight: 1000; letter-spacing: 0.5px; }
+
+    #gameStartBtn,
+    #gameStopBtn {
+      min-width: 158px !important;
+      padding: 14px 18px !important;
+      border-width: 2px !important;
+      font-size: 15px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    }
+
+    #gameStartBtn {
+      background: linear-gradient(135deg, #00a884, #06cf9c);
+      border-color: rgba(255,255,255,0.35) !important;
+      color: #021611;
+    }
+
+    #gameStopBtn {
+      background: linear-gradient(135deg, #ff4d4d, #ff9f43);
+      border-color: rgba(255,255,255,0.35) !important;
+      color: #1b0505;
+    }
 
     #gameCanvas {
       width: 100%;
@@ -610,10 +641,8 @@
     .app-screen {
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(900px 520px at 15% 10%, rgba(0,168,132,0.14), transparent 55%),
-        radial-gradient(900px 520px at 85% 90%, rgba(83,189,235,0.10), transparent 55%),
-        var(--wa-app-bg);
+      background: var(--light-bg);
+      background-attachment: fixed;
       color: var(--text-main);
       display: none;
       overflow: hidden;
@@ -679,7 +708,8 @@
       flex-direction: column;
       width: 100vw;
       height: 100vh;
-      background: var(--wa-app-bg);
+      background: var(--light-bg);
+      background-attachment: fixed;
     }
 
     .app-header {
@@ -717,6 +747,7 @@
       min-height: 0;
       overflow: auto;
       padding: 18px;
+      background: rgba(255,255,255,0.22);
     }
 
     #standaloneGameMount {
@@ -772,6 +803,27 @@
     .quiz-option.correct { border-color: rgba(0,168,132,0.9); background: rgba(0,168,132,0.18); }
     .quiz-option.wrong { border-color: rgba(255,75,75,0.8); background: rgba(255,75,75,0.14); }
 
+    .music-toggle {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 12000;
+      border: 1px solid rgba(0,168,132,0.45);
+      background: rgba(17,27,33,0.88);
+      color: var(--text-main);
+      border-radius: 999px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 900;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .music-toggle.on {
+      background: rgba(0,168,132,0.22);
+      color: var(--wa-green-2);
+    }
+
     @media (max-width: 760px) {
       .home-grid { grid-template-columns: 1fr; }
       .app-main { flex-direction: column; }
@@ -780,6 +832,7 @@
   </style>
 </head>
 <body>
+  <button type="button" class="music-toggle" id="musicToggleBtn">♪ Musiikki</button>
   <div id="homeScreen" class="app-screen">
     <div class="home-card">
       <div class="home-title">Filiperrr <span>Hub</span></div>
@@ -793,7 +846,7 @@
         <button type="button" class="home-choice" id="homeGamesBtn">
           <span class="choice-icon">🎮</span>
           <div class="choice-title">Pelit</div>
-          <div class="choice-sub">Snake, Geometry runner, Brawl shooter, Block Blast ja Asteroids.</div>
+          <div class="choice-sub">Snake, Geometry runner, Brawl shooter, Block Blast, Asteroids, Tetris, Contra, Sonic, Super Mario ja Stardew Valley.</div>
         </button>
         <button type="button" class="home-choice" id="homeChatBtn">
           <span class="choice-icon">💬</span>
@@ -1338,6 +1391,7 @@
     const subjectListEl = document.getElementById("subjectList");
     const difficultyListEl = document.getElementById("difficultyList");
     const schoolStageEl = document.getElementById("schoolStage");
+    const musicToggleBtnEl = document.getElementById("musicToggleBtn");
 
     let pendingStickerDataUrl = "";
     let pendingStatusStickerDataUrl = "";
@@ -1345,6 +1399,54 @@
     let selectedSubject = "matematiikka";
     let selectedDifficulty = "easy";
     let quizState = null;
+
+    // Calm background music (Web Audio, no external files)
+    let musicCtx = null;
+    let musicTimer = null;
+    let musicOn = false;
+    function startMusic() {
+      if (musicOn) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) {
+        alert("Selain ei tue Web Audio -musiikkia.");
+        return;
+      }
+      musicCtx = musicCtx || new AudioCtx();
+      musicOn = true;
+      musicToggleBtnEl?.classList.add("on");
+      const notes = [261.63, 329.63, 392.00, 493.88, 440.00, 392.00, 329.63, 293.66];
+      let step = 0;
+      const playNote = () => {
+        if (!musicOn || !musicCtx) return;
+        const now = musicCtx.currentTime;
+        const osc = musicCtx.createOscillator();
+        const gain = musicCtx.createGain();
+        const filter = musicCtx.createBiquadFilter();
+        osc.type = "sine";
+        osc.frequency.value = notes[step % notes.length] / 2;
+        filter.type = "lowpass";
+        filter.frequency.value = 900;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+        osc.connect(filter).connect(gain).connect(musicCtx.destination);
+        osc.start(now);
+        osc.stop(now + 1.25);
+        step++;
+      };
+      playNote();
+      musicTimer = setInterval(playNote, 950);
+    }
+    function stopMusic() {
+      musicOn = false;
+      if (musicTimer) clearInterval(musicTimer);
+      musicTimer = null;
+      musicToggleBtnEl?.classList.remove("on");
+    }
+    function toggleMusic() {
+      if (musicOn) stopMusic();
+      else startMusic();
+    }
 
     function hideAllMainViews() {
       if (homeScreenEl) homeScreenEl.style.display = "none";
@@ -1702,6 +1804,26 @@
         asteroids: {
           title: "Asteroids",
           hint: "Ohjaus: ↑ kiihdytä · ←/→ käänny · Space ammu · hajota asteroidit."
+        },
+        tetris: {
+          title: "Tetris",
+          hint: "Ohjaus: ←/→ liikuta · ↑ käännä · ↓ nopeuta · Space pudota."
+        },
+        contra: {
+          title: "Contra mini",
+          hint: "Ohjaus: A/D liiku · W hyppy · J ammu · vältä vihollisia."
+        },
+        sonic: {
+          title: "Sonic speed run",
+          hint: "Ohjaus: ←/→ tai A/D juokse · Space/W/↑ hyppy · Shift boostaa renkailla · kerää renkaita ja etene maaliin."
+        },
+        mario: {
+          title: "Super Mario mini",
+          hint: "Ohjaus: ←/→ tai A/D liiku · Space/W/↑ hyppy · osu palikoihin, vältä kuoppia ja etene lipulle."
+        },
+        stardew: {
+          title: "Stardew Valley farmi",
+          hint: "Ohjaus: WASD/nuolet liiku · E/Space/klikkaus pellolla: istuta, kastele tai kerää sato."
         }
       };
       const info = map[activeGameKey] || map.brawl;
@@ -1716,6 +1838,11 @@
         { key: "brawl", name: "Brawl Stars shooter", sub: "WASD + hiiri/Space" },
         { key: "block", name: "Block Blast", sub: "Klikkaa ruutua ja täytä rivejä" },
         { key: "asteroids", name: "Asteroids", sub: "↑, ←/→, Space" },
+        { key: "tetris", name: "Tetris", sub: "←/→, ↑, ↓, Space" },
+        { key: "contra", name: "Contra mini", sub: "A/D, W, J" },
+        { key: "sonic", name: "Sonic speed run", sub: "←/→ tai A/D, Space, Shift boost" },
+        { key: "mario", name: "Super Mario mini", sub: "←/→ tai A/D, Space hyppy" },
+        { key: "stardew", name: "Stardew Valley farmi", sub: "WASD + E/Space/klikkaus" },
       ];
     }
 
@@ -1771,6 +1898,11 @@
       if (activeGameKey === "brawl") brawlReset();
       if (activeGameKey === "block") blockReset();
       if (activeGameKey === "asteroids") astReset();
+      if (activeGameKey === "tetris") tetrisReset();
+      if (activeGameKey === "contra") contraReset();
+      if (activeGameKey === "sonic") sonicReset();
+      if (activeGameKey === "mario") marioReset();
+      if (activeGameKey === "stardew") stardewReset();
       gameLast = performance.now();
       gameLoop(gameLast);
     }
@@ -1785,6 +1917,11 @@
       if (activeGameKey === "gdash" && (e.key === " " || e.key === "ArrowUp")) e.preventDefault();
       if (activeGameKey === "snake" && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
       if (activeGameKey === "asteroids" && ["ArrowUp","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "tetris" && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "contra" && ["w","W","a","A","d","D","j","J"].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "sonic" && ["ArrowUp","ArrowLeft","ArrowRight"," ","w","W","a","A","d","D"].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "mario" && ["ArrowUp","ArrowLeft","ArrowRight"," ","w","W","a","A","d","D"].includes(e.key)) e.preventDefault();
+      if (activeGameKey === "stardew" && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," ","e","E","w","W","a","A","s","S","d","D"].includes(e.key)) e.preventDefault();
     });
     safeOn(window, "keyup", (e) => keys.delete(e.key));
 
@@ -1793,7 +1930,12 @@
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     });
-    safeOn(gameCanvasEl, "pointerdown", () => { mouse.down = true; });
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      const rect = gameCanvasEl.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.down = true;
+    });
     safeOn(gameCanvasEl, "pointerup", () => { mouse.down = false; });
 
     let gameLast = 0;
@@ -1809,6 +1951,11 @@
       if (activeGameKey === "brawl") brawlUpdate(ctx, w, h, dt);
       if (activeGameKey === "block") blockUpdate(ctx, w, h, dt);
       if (activeGameKey === "asteroids") astUpdate(ctx, w, h, dt);
+      if (activeGameKey === "tetris") tetrisUpdate(ctx, w, h, dt);
+      if (activeGameKey === "contra") contraUpdate(ctx, w, h, dt);
+      if (activeGameKey === "sonic") sonicUpdate(ctx, w, h, dt);
+      if (activeGameKey === "mario") marioUpdate(ctx, w, h, dt);
+      if (activeGameKey === "stardew") stardewUpdate(ctx, w, h, dt);
 
       gameRAF = requestAnimationFrame(gameLoop);
     }
@@ -2491,6 +2638,702 @@
         ctx.fillStyle = "#e9edef"; ctx.font = "900 28px system-ui"; ctx.fillText("Ship destroyed", 20, 60);
         ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
       }
+    }
+
+    // -------- Tetris --------
+    let tet = {};
+    const tetPieces = [
+      { c: "#00a884", s: [[1,1,1,1]] },
+      { c: "#53bdeb", s: [[1,0,0],[1,1,1]] },
+      { c: "#f8d14a", s: [[0,0,1],[1,1,1]] },
+      { c: "#ffd166", s: [[1,1],[1,1]] },
+      { c: "#06cf9c", s: [[0,1,1],[1,1,0]] },
+      { c: "#b388ff", s: [[0,1,0],[1,1,1]] },
+      { c: "#ff6b6b", s: [[1,1,0],[0,1,1]] },
+    ];
+    function tetrisReset() {
+      tet = {
+        cols: 10,
+        rows: 20,
+        board: Array.from({ length: 20 }, () => Array(10).fill(null)),
+        piece: null,
+        next: null,
+        x: 3,
+        y: 0,
+        timer: 0,
+        speed: 0.62,
+        score: 0,
+        lines: 0,
+        over: false,
+        lock: {}
+      };
+      tet.next = tetrisNewPiece();
+      tetrisSpawn();
+    }
+    function tetrisNewPiece() {
+      const base = tetPieces[Math.floor(Math.random() * tetPieces.length)];
+      return { c: base.c, s: base.s.map((r) => r.slice()) };
+    }
+    function tetrisSpawn() {
+      tet.piece = tet.next || tetrisNewPiece();
+      tet.next = tetrisNewPiece();
+      tet.x = Math.floor((tet.cols - tet.piece.s[0].length) / 2);
+      tet.y = 0;
+      if (tetrisHits(tet.x, tet.y, tet.piece.s)) tet.over = true;
+    }
+    function tetrisRotate(shape) {
+      const h = shape.length, w = shape[0].length;
+      return Array.from({ length: w }, (_, y) => Array.from({ length: h }, (_, x) => shape[h - 1 - x][y]));
+    }
+    function tetrisHits(px, py, shape) {
+      return shape.some((row, y) => row.some((cell, x) => {
+        if (!cell) return false;
+        const bx = px + x, by = py + y;
+        return bx < 0 || bx >= tet.cols || by >= tet.rows || (by >= 0 && tet.board[by][bx]);
+      }));
+    }
+    function tetrisFreeze() {
+      tet.piece.s.forEach((row, y) => row.forEach((cell, x) => {
+        if (!cell) return;
+        const by = tet.y + y, bx = tet.x + x;
+        if (by >= 0 && by < tet.rows && bx >= 0 && bx < tet.cols) tet.board[by][bx] = tet.piece.c;
+      }));
+      let cleared = 0;
+      tet.board = tet.board.filter((row) => {
+        const full = row.every(Boolean);
+        if (full) cleared++;
+        return !full;
+      });
+      while (tet.board.length < tet.rows) tet.board.unshift(Array(tet.cols).fill(null));
+      if (cleared) {
+        tet.lines += cleared;
+        tet.score += [0, 100, 300, 500, 800][cleared] || cleared * 250;
+        tet.speed = Math.max(0.18, tet.speed - cleared * 0.018);
+      }
+      tetrisSpawn();
+    }
+    function tetrisTap(key) {
+      if (tet.lock[key] && keys.has(key)) return false;
+      if (keys.has(key)) {
+        tet.lock[key] = true;
+        return true;
+      }
+      tet.lock[key] = false;
+      return false;
+    }
+    function tetrisUpdate(ctx, w, h, dt) {
+      if (!tet.board) tetrisReset();
+      ctx.fillStyle = "rgba(5,12,18,0.96)"; ctx.fillRect(0, 0, w, h); bgGrid(ctx, w, h, 0.018);
+      if (!tet.over) {
+        if (tetrisTap("ArrowLeft") && !tetrisHits(tet.x - 1, tet.y, tet.piece.s)) tet.x--;
+        if (tetrisTap("ArrowRight") && !tetrisHits(tet.x + 1, tet.y, tet.piece.s)) tet.x++;
+        if (tetrisTap("ArrowUp")) {
+          const r = tetrisRotate(tet.piece.s);
+          if (!tetrisHits(tet.x, tet.y, r)) tet.piece.s = r;
+        }
+        if (tetrisTap(" ")) {
+          while (!tetrisHits(tet.x, tet.y + 1, tet.piece.s)) tet.y++;
+          tetrisFreeze();
+        }
+        tet.timer += dt * (keys.has("ArrowDown") ? 7 : 1);
+        if (tet.timer >= tet.speed) {
+          tet.timer = 0;
+          if (!tetrisHits(tet.x, tet.y + 1, tet.piece.s)) tet.y++;
+          else tetrisFreeze();
+        }
+      }
+      const cell = Math.floor(Math.min((w - 180) / tet.cols, (h - 34) / tet.rows));
+      const ox = Math.floor((w - cell * tet.cols) / 2);
+      const oy = 20;
+      ctx.fillStyle = "rgba(17,27,33,0.9)";
+      rr(ctx, ox - 8, oy - 8, cell * tet.cols + 16, cell * tet.rows + 16, 18); ctx.fill();
+      for (let y = 0; y < tet.rows; y++) for (let x = 0; x < tet.cols; x++) {
+        ctx.strokeStyle = "rgba(255,255,255,0.055)";
+        ctx.strokeRect(ox + x * cell, oy + y * cell, cell, cell);
+        if (tet.board[y][x]) {
+          ctx.fillStyle = tet.board[y][x];
+          rr(ctx, ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4, 6); ctx.fill();
+        }
+      }
+      if (tet.piece) {
+        ctx.fillStyle = tet.piece.c;
+        tet.piece.s.forEach((row, y) => row.forEach((cellOn, x) => {
+          if (!cellOn) return;
+          rr(ctx, ox + (tet.x + x) * cell + 2, oy + (tet.y + y) * cell + 2, cell - 4, cell - 4, 6); ctx.fill();
+        }));
+      }
+      hud(ctx, ["Tetris", `Score: ${tet.score}`, `Rivit: ${tet.lines}`], "#b388ff");
+      if (tet.over) {
+        ctx.fillStyle = "rgba(0,0,0,0.58)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#e9edef"; ctx.font = "900 28px system-ui"; ctx.fillText("Game over", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // -------- Contra mini --------
+    let contra = {};
+    function contraReset() {
+      contra = {
+        player: { x: 80, y: 0, vx: 0, vy: 0, hp: 5, face: 1, inv: 0 },
+        bullets: [],
+        enemies: [],
+        spawn: 0,
+        score: 0,
+        scroll: 0,
+        shootCd: 0,
+        over: false,
+        lock: {}
+      };
+    }
+    function contraTap(key) {
+      if (contra.lock[key] && (keys.has(key) || keys.has(key.toUpperCase()))) return false;
+      if (keys.has(key) || keys.has(key.toUpperCase())) {
+        contra.lock[key] = true;
+        return true;
+      }
+      contra.lock[key] = false;
+      return false;
+    }
+    function contraUpdate(ctx, w, h, dt) {
+      if (!contra.player) contraReset();
+      const ground = h - 72;
+      const p = contra.player;
+      ctx.fillStyle = "#08131a"; ctx.fillRect(0, 0, w, h);
+      const grd = ctx.createLinearGradient(0, 0, 0, h);
+      grd.addColorStop(0, "#0b2230"); grd.addColorStop(1, "#132018");
+      ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
+      bgGrid(ctx, w, h, 0.018);
+      if (!contra.over) {
+        contra.scroll += dt * 80;
+        p.vx = 0;
+        if (keys.has("a") || keys.has("A")) { p.vx = -210; p.face = -1; }
+        if (keys.has("d") || keys.has("D")) { p.vx = 210; p.face = 1; }
+        if (contraTap("w") && p.y >= ground - 2) p.vy = -430;
+        p.vy += 980 * dt;
+        p.x = Math.max(30, Math.min(w - 40, p.x + p.vx * dt));
+        p.y = Math.min(ground, p.y + p.vy * dt);
+        if (p.y >= ground) p.vy = 0;
+        p.inv = Math.max(0, p.inv - dt);
+        contra.shootCd = Math.max(0, contra.shootCd - dt);
+        if ((keys.has("j") || keys.has("J") || mouse.down) && contra.shootCd <= 0) {
+          const dir = mouse.down ? Math.sign(mouse.x - p.x) || p.face : p.face;
+          contra.bullets.push({ x: p.x + dir * 24, y: p.y - 24, vx: dir * 620, life: 1.25 });
+          contra.shootCd = 0.16;
+        }
+        contra.spawn -= dt;
+        if (contra.spawn <= 0) {
+          const side = Math.random() < 0.5 ? -1 : 1;
+          contra.enemies.push({ x: side < 0 ? -30 : w + 30, y: ground, hp: 2, speed: 85 + Math.random() * 70, side });
+          contra.spawn = Math.max(0.45, 1.35 - contra.score / 900);
+        }
+      }
+      contra.bullets.forEach((b) => { b.x += b.vx * dt; b.life -= dt; });
+      contra.bullets = contra.bullets.filter((b) => b.life > 0 && b.x > -60 && b.x < w + 60);
+      contra.enemies.forEach((e) => {
+        const dir = Math.sign(p.x - e.x) || -e.side;
+        if (!contra.over) e.x += dir * e.speed * dt;
+        for (const b of contra.bullets) {
+          if (Math.abs(b.x - e.x) < 22 && Math.abs(b.y - (e.y - 24)) < 26) {
+            b.life = -1; e.hp--; contra.score += 25;
+          }
+        }
+        if (!contra.over && p.inv <= 0 && Math.abs(p.x - e.x) < 30 && Math.abs((p.y - 20) - (e.y - 22)) < 38) {
+          p.hp--; p.inv = 1.0; p.vx = -dir * 160;
+          if (p.hp <= 0) contra.over = true;
+        }
+      });
+      contra.enemies = contra.enemies.filter((e) => e.hp > 0);
+      // draw stage
+      ctx.fillStyle = "rgba(0,168,132,0.16)";
+      for (let x = -((contra.scroll % 120)); x < w; x += 120) {
+        rr(ctx, x, ground + 10, 74, 18, 7); ctx.fill();
+      }
+      ctx.fillStyle = "#21342d"; ctx.fillRect(0, ground + 34, w, h - ground);
+      ctx.fillStyle = "rgba(248,209,74,0.55)";
+      for (let x = 60 - ((contra.scroll * 0.45) % 180); x < w; x += 180) {
+        ctx.beginPath(); ctx.arc(x, 60, 3, 0, Math.PI * 2); ctx.fill();
+      }
+      // draw player
+      ctx.save();
+      ctx.globalAlpha = p.inv > 0 ? 0.55 : 1;
+      ctx.translate(p.x, p.y);
+      ctx.scale(p.face, 1);
+      ctx.fillStyle = "#00a884"; rr(ctx, -14, -46, 28, 36, 8); ctx.fill();
+      ctx.fillStyle = "#e9edef"; ctx.beginPath(); ctx.arc(0, -56, 12, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#53bdeb"; rr(ctx, 10, -37, 24, 8, 4); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = "#f8d14a";
+      contra.bullets.forEach((b) => { rr(ctx, b.x - 7, b.y - 3, 14, 6, 4); ctx.fill(); });
+      contra.enemies.forEach((e) => {
+        ctx.fillStyle = e.hp > 1 ? "#ff6b6b" : "#ff9f43";
+        rr(ctx, e.x - 15, e.y - 42, 30, 34, 9); ctx.fill();
+        ctx.fillStyle = "#111b21"; ctx.fillRect(e.x - 7, e.y - 30, 14, 4);
+      });
+      hud(ctx, ["Contra mini", `Score: ${contra.score}`, `HP: ${p.hp}`], "#ff6b6b");
+      if (contra.over) {
+        ctx.fillStyle = "rgba(0,0,0,0.58)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#e9edef"; ctx.font = "900 28px system-ui"; ctx.fillText("Mission failed", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // -------- Sonic speed run --------
+    let sonic = {};
+    function sonicReset() {
+      sonic = {
+        x: 80,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        scroll: 0,
+        rings: 0,
+        score: 0,
+        inv: 0,
+        over: false,
+        won: false,
+        boost: 0,
+        goalX: 5400,
+        ringList: Array.from({ length: 34 }, (_, i) => ({ x: 260 + i * 145, y: 160 + (i % 3) * 34, got: false })),
+        spikes: Array.from({ length: 16 }, (_, i) => ({ x: 520 + i * 310, y: 0 })),
+        springs: Array.from({ length: 8 }, (_, i) => ({ x: 780 + i * 620, y: 0 })),
+        badniks: Array.from({ length: 12 }, (_, i) => ({ x: 690 + i * 390, y: 0, dead: false, phase: i * 0.7 }))
+      };
+    }
+    function platformLeft() {
+      return keys.has("ArrowLeft") || keys.has("a") || keys.has("A");
+    }
+    function platformRight() {
+      return keys.has("ArrowRight") || keys.has("d") || keys.has("D");
+    }
+    function platformJump() {
+      return keys.has(" ") || keys.has("ArrowUp") || keys.has("w") || keys.has("W");
+    }
+    function sonicUpdate(ctx, w, h, dt) {
+      if (!sonic.ringList) sonicReset();
+      const ground = h - 78;
+      ctx.fillStyle = "#d9fbff"; ctx.fillRect(0, 0, w, h);
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, "#bff4ff"); sky.addColorStop(0.58, "#f8fff2"); sky.addColorStop(1, "#95e37f");
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,255,255,0.86)";
+      for (let i = 0; i < 8; i++) {
+        const cx = (i * 210 - (sonic.scroll * 0.25 % 210));
+        ctx.beginPath(); ctx.ellipse(cx, 70 + (i % 3) * 30, 48, 16, 0, 0, Math.PI * 2); ctx.fill();
+      }
+      if (!sonic.over) {
+        const boosting = (keys.has("Shift") || keys.has("ShiftLeft") || keys.has("ShiftRight")) && sonic.rings > 0 && platformRight();
+        if (boosting) {
+          sonic.boost += dt;
+          sonic.score += dt * 25;
+        } else {
+          sonic.boost = Math.max(0, sonic.boost - dt * 2);
+        }
+        const boostMul = boosting ? 1.38 : 1;
+        const accel = platformRight() ? 860 * boostMul : platformLeft() ? -650 : 0;
+        sonic.vx += accel * dt;
+        sonic.vx *= platformRight() || platformLeft() ? 0.992 : 0.91;
+        sonic.vx = Math.max(-360, Math.min(boosting ? 980 : 760, sonic.vx));
+        if (boosting && Math.floor(sonic.boost * 5) !== Math.floor((sonic.boost - dt) * 5)) sonic.rings = Math.max(0, sonic.rings - 1);
+        if (platformJump() && sonic.y >= ground - 2) sonic.vy = -520;
+        sonic.vy += 1050 * dt;
+        sonic.x += sonic.vx * dt;
+        sonic.y = Math.min(ground, sonic.y + sonic.vy * dt);
+        if (sonic.y >= ground) sonic.vy = 0;
+        if (sonic.x > w * 0.42) {
+          sonic.scroll += sonic.x - w * 0.42;
+          sonic.x = w * 0.42;
+        }
+        sonic.x = Math.max(40, sonic.x);
+        sonic.inv = Math.max(0, sonic.inv - dt);
+        sonic.score += Math.max(0, sonic.vx) * dt * 0.03;
+        if (sonic.scroll + sonic.x >= sonic.goalX) {
+          sonic.won = true;
+          sonic.over = true;
+          sonic.score += 1000;
+        }
+      }
+      ctx.fillStyle = "#5dc45b";
+      ctx.fillRect(0, ground + 30, w, h - ground);
+      ctx.fillStyle = "#2f8f40";
+      for (let x = -((sonic.scroll * 0.8) % 90); x < w; x += 90) {
+        ctx.beginPath(); ctx.moveTo(x, ground + 30); ctx.lineTo(x + 45, ground + 4); ctx.lineTo(x + 90, ground + 30); ctx.closePath(); ctx.fill();
+      }
+      sonic.ringList.forEach((r) => {
+        const sx = r.x - sonic.scroll;
+        if (sx < -60 || sx > w + 60 || r.got) return;
+        if (!sonic.over && Math.hypot(sonic.x - sx, (sonic.y - 30) - r.y) < 30) {
+          r.got = true; sonic.rings++; sonic.score += 100;
+        }
+        ctx.strokeStyle = "#f8d14a"; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(sx, r.y, 14 + Math.sin(performance.now() / 130) * 2, 0, Math.PI * 2); ctx.stroke();
+      });
+      sonic.springs.forEach((s) => {
+        const sx = s.x - sonic.scroll;
+        if (sx < -50 || sx > w + 50) return;
+        s.y = ground;
+        ctx.fillStyle = "#ff6b6b"; rr(ctx, sx - 18, ground - 18, 36, 18, 7); ctx.fill();
+        ctx.fillStyle = "#e9edef"; ctx.fillRect(sx - 12, ground - 28, 24, 8);
+        if (!sonic.over && Math.abs(sonic.x - sx) < 30 && sonic.y > ground - 34) sonic.vy = -720;
+      });
+      sonic.spikes.forEach((sp) => {
+        const sx = sp.x - sonic.scroll;
+        if (sx < -60 || sx > w + 60) return;
+        sp.y = ground;
+        ctx.fillStyle = "#3b4650";
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath(); ctx.moveTo(sx - 26 + i * 22, ground + 2); ctx.lineTo(sx - 15 + i * 22, ground - 34); ctx.lineTo(sx - 4 + i * 22, ground + 2); ctx.closePath(); ctx.fill();
+        }
+        if (!sonic.over && sonic.inv <= 0 && Math.abs(sonic.x - sx) < 34 && sonic.y > ground - 45) {
+          if (sonic.rings > 0) { sonic.rings = Math.max(0, sonic.rings - 5); sonic.inv = 1.1; sonic.vx = -180; sonic.vy = -260; }
+          else sonic.over = true;
+        }
+      });
+      sonic.badniks.forEach((b) => {
+        if (b.dead) return;
+        const sx = b.x - sonic.scroll + Math.sin(performance.now() / 450 + b.phase) * 42;
+        if (sx < -70 || sx > w + 70) return;
+        b.y = ground;
+        ctx.fillStyle = "#d64545";
+        ctx.beginPath(); ctx.ellipse(sx, ground - 20, 24, 17, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(sx - 8, ground - 24, 5, 0, Math.PI * 2); ctx.arc(sx + 8, ground - 24, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#111b21"; ctx.fillRect(sx - 11, ground - 25, 4, 3); ctx.fillRect(sx + 6, ground - 25, 4, 3);
+        if (!sonic.over && Math.abs(sonic.x - sx) < 32 && Math.abs((sonic.y - 24) - (ground - 20)) < 32) {
+          if (sonic.vy > 120 || Math.abs(sonic.vx) > 620) {
+            b.dead = true; sonic.vy = -340; sonic.score += 350;
+          } else if (sonic.inv <= 0) {
+            if (sonic.rings > 0) { sonic.rings = Math.max(0, sonic.rings - 8); sonic.inv = 1.1; sonic.vx = -240; sonic.vy = -240; }
+            else sonic.over = true;
+          }
+        }
+      });
+      const goalScreenX = sonic.goalX - sonic.scroll;
+      if (goalScreenX > -80 && goalScreenX < w + 80) {
+        ctx.fillStyle = "#111b21"; ctx.fillRect(goalScreenX, ground - 112, 8, 112);
+        ctx.fillStyle = "#f8d14a"; ctx.beginPath(); ctx.moveTo(goalScreenX + 8, ground - 110); ctx.lineTo(goalScreenX + 72, ground - 88); ctx.lineTo(goalScreenX + 8, ground - 66); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#111b21"; ctx.font = "900 12px system-ui"; ctx.fillText("MAALI", goalScreenX + 16, ground - 85);
+      }
+      ctx.save();
+      ctx.globalAlpha = sonic.inv > 0 ? 0.55 : 1;
+      ctx.translate(sonic.x, sonic.y - 28);
+      const spin = Math.abs(sonic.vx) > 280;
+      ctx.fillStyle = "#2478ff";
+      ctx.beginPath(); ctx.arc(0, 0, spin ? 23 : 20, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ffe1b8"; ctx.beginPath(); ctx.arc(7, 4, 11, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(8, -6, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ff4343"; rr(ctx, -18, 19, 20, 8, 5); rr(ctx, 4, 19, 20, 8, 5); ctx.fill();
+      ctx.restore();
+      hud(ctx, ["Sonic speed run", `Rings: ${sonic.rings}`, `Score: ${Math.floor(sonic.score)}`, `Maali: ${Math.max(0, Math.floor((sonic.goalX - sonic.scroll - sonic.x) / 10))}m`], "#2478ff");
+      if (sonic.over) {
+        ctx.fillStyle = "rgba(255,255,255,0.68)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#111b21"; ctx.font = "900 28px system-ui"; ctx.fillText(sonic.won ? "Maali!" : "Renkaita ei ollut!", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // -------- Super Mario mini --------
+    let mario = {};
+    function marioReset() {
+      mario = {
+        x: 90,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        scroll: 0,
+        coins: 0,
+        score: 0,
+        lives: 3,
+        inv: 0,
+        over: false,
+        won: false,
+        goalX: 5200,
+        blocks: Array.from({ length: 14 }, (_, i) => ({ x: 340 + i * 220, y: 190 + (i % 2) * 48, hit: false })),
+        coinsList: Array.from({ length: 28 }, (_, i) => ({ x: 250 + i * 150, y: 130 + (i % 4) * 28, got: false })),
+        goombas: Array.from({ length: 18 }, (_, i) => ({ x: 560 + i * 260, y: 0, dead: false, dir: i % 2 ? -1 : 1 })),
+        pits: Array.from({ length: 7 }, (_, i) => ({ x: 900 + i * 680, w: 88 })),
+        pipes: Array.from({ length: 8 }, (_, i) => ({ x: 680 + i * 560, h: 62 + (i % 3) * 18 }))
+      };
+    }
+    function marioInPit(worldX) {
+      return mario.pits.some((p) => worldX > p.x && worldX < p.x + p.w);
+    }
+    function marioUpdate(ctx, w, h, dt) {
+      if (!mario.blocks) marioReset();
+      const ground = h - 74;
+      ctx.fillStyle = "#8ed8ff"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      for (let i = 0; i < 7; i++) {
+        const x = i * 230 - (mario.scroll * 0.18 % 230);
+        ctx.beginPath(); ctx.arc(x, 80 + (i % 2) * 28, 22, 0, Math.PI * 2); ctx.arc(x + 24, 76 + (i % 2) * 28, 28, 0, Math.PI * 2); ctx.arc(x + 54, 82 + (i % 2) * 28, 22, 0, Math.PI * 2); ctx.fill();
+      }
+      const worldX = mario.scroll + mario.x;
+      if (!mario.over) {
+        mario.vx = 0;
+        if (platformLeft()) mario.vx = -235;
+        if (platformRight()) mario.vx = 255;
+        if (platformJump() && mario.y >= ground - 2 && !marioInPit(worldX)) mario.vy = -520;
+        mario.vy += 1080 * dt;
+        mario.x += mario.vx * dt;
+        mario.y += mario.vy * dt;
+        if (!marioInPit(worldX) && mario.y > ground) { mario.y = ground; mario.vy = 0; }
+        if (mario.x > w * 0.45) { mario.scroll += mario.x - w * 0.45; mario.x = w * 0.45; }
+        mario.x = Math.max(35, mario.x);
+        mario.inv = Math.max(0, mario.inv - dt);
+        if (mario.y > h + 80) {
+          mario.lives--; mario.inv = 1;
+          if (mario.lives <= 0) mario.over = true;
+          else { mario.x = 90; mario.y = ground; mario.vy = 0; }
+        }
+        mario.score += dt * 12;
+        if (mario.scroll + mario.x >= mario.goalX) {
+          mario.won = true;
+          mario.over = true;
+          mario.score += 1500;
+        }
+      }
+      // ground with pits
+      ctx.fillStyle = "#5ebc4b";
+      ctx.fillRect(0, ground + 28, w, h - ground);
+      ctx.fillStyle = "#9b5c28";
+      ctx.fillRect(0, ground + 45, w, h - ground);
+      mario.pits.forEach((p) => {
+        const sx = p.x - mario.scroll;
+        if (sx < -p.w || sx > w) return;
+        ctx.fillStyle = "#8ed8ff"; ctx.fillRect(sx, ground + 20, p.w, h - ground);
+        ctx.fillStyle = "#3f2b1c"; ctx.fillRect(sx - 8, ground + 38, 8, h - ground);
+        ctx.fillRect(sx + p.w, ground + 38, 8, h - ground);
+      });
+      mario.pipes.forEach((pipe) => {
+        const sx = pipe.x - mario.scroll;
+        if (sx < -70 || sx > w + 70) return;
+        ctx.fillStyle = "#0f9d58";
+        rr(ctx, sx - 22, ground - pipe.h, 44, pipe.h + 30, 8); ctx.fill();
+        ctx.fillStyle = "#18c76f";
+        rr(ctx, sx - 31, ground - pipe.h - 14, 62, 22, 8); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.fillRect(sx - 14, ground - pipe.h + 8, 7, pipe.h - 8);
+      });
+      mario.blocks.forEach((b) => {
+        const sx = b.x - mario.scroll;
+        if (sx < -50 || sx > w + 50) return;
+        const bob = b.hit ? 0 : Math.sin(performance.now() / 250 + b.x) * 2;
+        ctx.fillStyle = b.hit ? "#9b6a3a" : "#f8d14a";
+        rr(ctx, sx - 18, b.y - 18 + bob, 36, 36, 5); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.35)"; ctx.fillRect(sx - 12, b.y - 12 + bob, 8, 8);
+        ctx.fillStyle = "#111b21"; ctx.font = "900 18px system-ui"; ctx.fillText(b.hit ? "." : "?", sx - 5, b.y + 7 + bob);
+        if (!b.hit && mario.vy < 0 && Math.abs(mario.x - sx) < 30 && Math.abs((mario.y - 58) - b.y) < 22) {
+          b.hit = true; mario.vy = 180; mario.coins++; mario.score += 200;
+        }
+      });
+      mario.coinsList.forEach((c) => {
+        const sx = c.x - mario.scroll;
+        if (sx < -40 || sx > w + 40 || c.got) return;
+        ctx.fillStyle = "#ffd166";
+        ctx.beginPath(); ctx.ellipse(sx, c.y, 9, 15, 0, 0, Math.PI * 2); ctx.fill();
+        if (!mario.over && Math.hypot(mario.x - sx, (mario.y - 34) - c.y) < 28) {
+          c.got = true; mario.coins++; mario.score += 100;
+        }
+      });
+      mario.goombas.forEach((g) => {
+        if (g.dead) return;
+        if (!mario.over) {
+          g.x += g.dir * 38 * dt;
+          const nearPit = mario.pits.some((p) => g.x > p.x - 28 && g.x < p.x + p.w + 28);
+          if (nearPit || Math.random() < 0.002) g.dir *= -1;
+        }
+        const sx = g.x - mario.scroll;
+        if (sx < -60 || sx > w + 60) return;
+        g.y = ground;
+        ctx.fillStyle = "#8a4b25"; ctx.beginPath(); ctx.ellipse(sx, ground - 16, 18, 18, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#5a3218"; rr(ctx, sx - 18, ground - 5, 13, 6, 3); rr(ctx, sx + 5, ground - 5, 13, 6, 3); ctx.fill();
+        ctx.fillStyle = "#111b21"; ctx.fillRect(sx - 9, ground - 22, 5, 4); ctx.fillRect(sx + 5, ground - 22, 5, 4);
+        if (!mario.over && Math.abs(mario.x - sx) < 28 && Math.abs((mario.y - 22) - (ground - 16)) < 30) {
+          if (mario.vy > 120 && mario.y < ground - 8) { g.dead = true; mario.vy = -320; mario.score += 300; }
+          else if (mario.inv <= 0) {
+            mario.lives--; mario.inv = 1.2; mario.vy = -260;
+            if (mario.lives <= 0) mario.over = true;
+          }
+        }
+      });
+      const flagX = mario.goalX - mario.scroll;
+      if (flagX > -80 && flagX < w + 80) {
+        ctx.fillStyle = "#111b21"; ctx.fillRect(flagX, ground - 136, 8, 136);
+        ctx.fillStyle = "#00a884"; ctx.beginPath(); ctx.moveTo(flagX + 8, ground - 134); ctx.lineTo(flagX + 76, ground - 106); ctx.lineTo(flagX + 8, ground - 78); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#f8d14a"; ctx.beginPath(); ctx.arc(flagX + 4, ground - 142, 10, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.save();
+      ctx.globalAlpha = mario.inv > 0 ? 0.58 : 1;
+      ctx.translate(mario.x, mario.y);
+      ctx.fillStyle = "#e53935"; rr(ctx, -16, -58, 32, 16, 8); ctx.fill();
+      ctx.fillStyle = "#ffd1a8"; ctx.beginPath(); ctx.arc(0, -40, 15, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#e53935"; rr(ctx, -14, -28, 28, 30, 6); ctx.fill();
+      ctx.fillStyle = "#2456d8"; rr(ctx, -12, -12, 24, 22, 5); ctx.fill();
+      ctx.fillStyle = "#5a3218"; rr(ctx, -19, 8, 16, 8, 4); rr(ctx, 3, 8, 16, 8, 4); ctx.fill();
+      ctx.restore();
+      hud(ctx, ["Super Mario mini", `Kolikot: ${mario.coins}`, `Elämät: ${mario.lives}`, `Score: ${Math.floor(mario.score)}`, `Maali: ${Math.max(0, Math.floor((mario.goalX - mario.scroll - mario.x) / 10))}m`], "#e53935");
+      if (mario.over) {
+        ctx.fillStyle = "rgba(255,255,255,0.68)"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#111b21"; ctx.font = "900 28px system-ui"; ctx.fillText(mario.won ? "Maali!" : "Game over", 20, 60);
+        ctx.font = "700 14px system-ui"; ctx.fillText("Paina Käynnistä uudelleen.", 20, 86);
+      }
+    }
+
+    // -------- Stardew Valley farmi --------
+    let stardew = {};
+    function stardewReset() {
+      stardew = {
+        player: { x: 120, y: 260, face: 1 },
+        coins: 25,
+        seeds: 8,
+        day: 1,
+        time: 6.5,
+        actionCd: 0,
+        message: "Tervetuloa farmille! Istuta siemeniä ja kastele kasvit.",
+        plots: Array.from({ length: 24 }, (_, i) => ({
+          x: 260 + (i % 6) * 62,
+          y: 155 + Math.floor(i / 6) * 54,
+          crop: false,
+          watered: false,
+          growth: 0,
+          ready: false
+        })),
+        butterflies: Array.from({ length: 10 }, (_, i) => ({ x: 110 + i * 83, y: 75 + (i % 4) * 32, p: i * 0.8 })),
+        chickens: Array.from({ length: 3 }, (_, i) => ({ x: 95 + i * 54, y: 390 + i * 12, p: i * 1.7 }))
+      };
+    }
+    function stardewAction() {
+      if (!stardew.plots || stardew.actionCd > 0) return;
+      const p = stardew.player;
+      let best = null;
+      let bestDist = Infinity;
+      for (const plot of stardew.plots) {
+        const d = Math.hypot(p.x - (plot.x + 23), p.y - (plot.y + 20));
+        if (d < bestDist) { bestDist = d; best = plot; }
+      }
+      if (!best || bestDist > 74) {
+        stardew.message = "Mene lähemmäs peltoa.";
+        stardew.actionCd = 0.18;
+        return;
+      }
+      if (best.ready) {
+        best.crop = false; best.watered = false; best.growth = 0; best.ready = false;
+        stardew.coins += 12;
+        stardew.message = "Keräsit sadon! +12 kolikkoa.";
+      } else if (!best.crop) {
+        if (stardew.seeds <= 0) {
+          stardew.message = "Siemenet loppuivat. Ostit 5 siementä 10 kolikolla.";
+          if (stardew.coins >= 10) { stardew.coins -= 10; stardew.seeds += 5; }
+        } else {
+          best.crop = true; best.watered = false; best.growth = 0; stardew.seeds--;
+          stardew.message = "Istutit siemenen. Kastele se seuraavaksi.";
+        }
+      } else if (!best.watered) {
+        best.watered = true;
+        stardew.message = "Kastelit kasvin. Se kasvaa nopeammin.";
+      } else {
+        stardew.message = "Kasvi kasvaa jo. Odota hetki.";
+      }
+      stardew.actionCd = 0.22;
+    }
+    function stardewUpdate(ctx, w, h, dt) {
+      if (!stardew.plots) stardewReset();
+      const p = stardew.player;
+      stardew.actionCd = Math.max(0, stardew.actionCd - dt);
+      stardew.time += dt * 0.18;
+      if (stardew.time >= 22) {
+        stardew.day++;
+        stardew.time = 6.5;
+        stardew.plots.forEach((plot) => {
+          if (plot.crop) { plot.watered = false; plot.growth = Math.min(1, plot.growth + 0.12); if (plot.growth >= 1) plot.ready = true; }
+        });
+        stardew.message = `Päivä ${stardew.day} alkaa. Kasvit kaipaavat vettä.`;
+      }
+      const speed = keys.has("Shift") ? 230 : 160;
+      let dx = 0, dy = 0;
+      if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) dx -= 1;
+      if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) dx += 1;
+      if (keys.has("ArrowUp") || keys.has("w") || keys.has("W")) dy -= 1;
+      if (keys.has("ArrowDown") || keys.has("s") || keys.has("S")) dy += 1;
+      if (dx || dy) {
+        const len = Math.hypot(dx, dy) || 1;
+        p.x = Math.max(34, Math.min(w - 34, p.x + dx / len * speed * dt));
+        p.y = Math.max(82, Math.min(h - 42, p.y + dy / len * speed * dt));
+        p.face = dx < 0 ? -1 : dx > 0 ? 1 : p.face;
+      }
+      if (keys.has("e") || keys.has("E") || keys.has(" ") || mouse.down) stardewAction();
+      stardew.plots.forEach((plot) => {
+        if (!plot.crop || plot.ready) return;
+        plot.growth = Math.min(1, plot.growth + dt * (plot.watered ? 0.085 : 0.022));
+        if (plot.growth >= 1) plot.ready = true;
+      });
+
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, "#c8f7ff");
+      sky.addColorStop(0.48, "#fff3c4");
+      sky.addColorStop(1, "#77c86b");
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,255,255,0.72)";
+      for (let i = 0; i < 6; i++) {
+        const x = i * 170 + Math.sin(performance.now() / 1800 + i) * 18;
+        ctx.beginPath(); ctx.ellipse(x, 58 + i % 2 * 24, 48, 16, 0, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = "#5fb15b"; ctx.fillRect(0, h * 0.42, w, h);
+      ctx.fillStyle = "#4d9d4c";
+      for (let x = -40; x < w; x += 80) {
+        ctx.beginPath(); ctx.moveTo(x, h * 0.42); ctx.lineTo(x + 40, h * 0.37); ctx.lineTo(x + 80, h * 0.42); ctx.closePath(); ctx.fill();
+      }
+      // farmhouse
+      ctx.fillStyle = "#8b5a2b"; rr(ctx, 38, 118, 126, 88, 10); ctx.fill();
+      ctx.fillStyle = "#d54d3f"; ctx.beginPath(); ctx.moveTo(28, 124); ctx.lineTo(102, 76); ctx.lineTo(176, 124); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#ffe5a8"; ctx.fillRect(72, 154, 26, 52); ctx.fillRect(118, 142, 24, 22);
+
+      stardew.plots.forEach((plot) => {
+        ctx.fillStyle = plot.watered ? "#6b4a30" : "#8a5c38";
+        rr(ctx, plot.x, plot.y, 48, 38, 8); ctx.fill();
+        ctx.strokeStyle = "rgba(60,30,12,0.35)"; ctx.strokeRect(plot.x + 5, plot.y + 5, 38, 28);
+        if (plot.crop) {
+          const g = plot.growth;
+          ctx.fillStyle = plot.ready ? "#f8d14a" : "#2ca34a";
+          const stemH = 8 + g * 20;
+          ctx.fillRect(plot.x + 23, plot.y + 30 - stemH, 4, stemH);
+          ctx.beginPath(); ctx.ellipse(plot.x + 18, plot.y + 28 - stemH * 0.55, 8 + g * 6, 5 + g * 4, -0.4, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(plot.x + 31, plot.y + 26 - stemH * 0.45, 8 + g * 6, 5 + g * 4, 0.4, 0, Math.PI * 2); ctx.fill();
+          if (plot.ready) {
+            ctx.fillStyle = "#ff6b6b";
+            ctx.beginPath(); ctx.arc(plot.x + 25, plot.y + 11, 7, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+      });
+      stardew.chickens.forEach((c) => {
+        const x = c.x + Math.sin(performance.now() / 600 + c.p) * 18;
+        const y = c.y + Math.cos(performance.now() / 700 + c.p) * 6;
+        ctx.fillStyle = "#fff7df"; ctx.beginPath(); ctx.ellipse(x, y, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#f8d14a"; ctx.beginPath(); ctx.moveTo(x + 14, y - 2); ctx.lineTo(x + 24, y + 2); ctx.lineTo(x + 14, y + 6); ctx.closePath(); ctx.fill();
+      });
+      stardew.butterflies.forEach((b) => {
+        const x = b.x + Math.sin(performance.now() / 700 + b.p) * 34;
+        const y = b.y + Math.cos(performance.now() / 500 + b.p) * 14;
+        ctx.fillStyle = "rgba(179,136,255,0.85)";
+        ctx.beginPath(); ctx.ellipse(x - 5, y, 6, 9, -0.5, 0, Math.PI * 2); ctx.ellipse(x + 5, y, 6, 9, 0.5, 0, Math.PI * 2); ctx.fill();
+      });
+      // player
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.scale(p.face, 1);
+      ctx.fillStyle = "#2f7d32"; rr(ctx, -12, -28, 24, 28, 7); ctx.fill();
+      ctx.fillStyle = "#ffd1a8"; ctx.beginPath(); ctx.arc(0, -38, 13, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#8b5a2b"; rr(ctx, -15, -52, 30, 12, 6); ctx.fill();
+      ctx.fillStyle = "#3d6fb6"; rr(ctx, 9, -18, 18, 5, 3); ctx.fill();
+      ctx.restore();
+
+      const hour = Math.floor(stardew.time);
+      const min = Math.floor((stardew.time - hour) * 60).toString().padStart(2, "0");
+      hud(ctx, ["Stardew Valley farmi", `Päivä ${stardew.day} klo ${hour}:${min}`, `Kolikot: ${stardew.coins} · Siemenet: ${stardew.seeds}`, stardew.message], "#77c86b");
+      ctx.fillStyle = "rgba(17,27,33,0.78)";
+      rr(ctx, w - 235, 14, 220, 72, 16); ctx.fill();
+      ctx.fillStyle = "#e9edef";
+      ctx.font = "800 12px system-ui";
+      ctx.fillText("Toimi pellolla:", w - 218, 38);
+      ctx.fillText("1. Istuta  2. Kastele  3. Kerää", w - 218, 58);
     }
 
     // ----------------------------
@@ -3689,6 +4532,7 @@
     safeOn(schoolBackBtnEl, "click", showHome);
     safeOn(loginBackBtnEl, "click", showHome);
     safeOn(chatBackBtnEl, "click", showHome);
+    safeOn(musicToggleBtnEl, "click", toggleMusic);
 
     emojiToggleBtnEl.addEventListener("click", toggleEmoji);
     lahetaBtnEl.addEventListener("click", lahetaViesti);
@@ -4030,6 +4874,11 @@
       brawlReset();
       blockReset();
       astReset();
+      tetrisReset();
+      contraReset();
+      sonicReset();
+      marioReset();
+      stardewReset();
       const ses = loadSession();
       const u = ses?.name ? getUserByName(ses.name) : null;
       if (u) loginUserEl.value = u.name;
