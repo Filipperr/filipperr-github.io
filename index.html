@@ -899,29 +899,46 @@
 
       #homeScreen {
         place-items: start center;
-        padding: 18px 12px calc(84px + env(safe-area-inset-bottom, 0px));
+        padding: 10px 8px calc(62px + env(safe-area-inset-bottom, 0px));
       }
 
       .home-card {
         width: 100%;
-        padding: 22px 16px;
-        border-radius: 24px;
+        padding: 16px 12px;
+        border-radius: 18px;
       }
 
       .home-title {
-        font-size: clamp(36px, 14vw, 56px);
-        letter-spacing: -1.5px;
+        font-size: clamp(30px, 11vw, 44px);
+        letter-spacing: -1px;
+        margin-bottom: 6px;
       }
 
       .home-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 8px;
+        margin-top: 14px;
       }
 
       .home-choice,
       .app-card {
-        padding: 16px;
-        border-radius: 18px;
+        padding: 12px;
+        border-radius: 15px;
+      }
+
+      .choice-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .choice-title {
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+
+      .choice-sub {
+        font-size: 12px;
+        line-height: 1.3;
       }
 
       .app-shell {
@@ -930,13 +947,24 @@
 
       .app-header {
         min-height: auto;
-        padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px;
+        padding: calc(6px + env(safe-area-inset-top, 0px)) 8px 6px;
         align-items: center;
+        gap: 8px;
       }
 
       .app-header h2 {
-        font-size: 18px;
+        font-size: 15px;
         letter-spacing: 1px;
+      }
+
+      .app-header .dim {
+        font-size: 10px;
+      }
+
+      .app-header .secondary-btn {
+        padding: 8px 10px;
+        min-width: auto;
+        font-size: 12px;
       }
 
       .app-main {
@@ -947,15 +975,15 @@
       .app-sidebar {
         width: 100%;
         max-height: none;
-        min-height: 88px;
-        padding: 10px 10px 8px;
+        min-height: 58px;
+        padding: 6px 7px;
         border-right: none;
         border-bottom: 1px solid var(--border);
       }
 
       #standaloneGameList {
         display: flex;
-        gap: 10px;
+        gap: 7px;
         overflow-x: auto;
         overflow-y: hidden;
         scroll-snap-type: x proximity;
@@ -963,28 +991,29 @@
       }
 
       #standaloneGameList .list-item {
-        min-width: 210px;
-        min-height: 64px;
-        padding: 9px 10px;
-        border-radius: 16px;
+        min-width: 148px;
+        min-height: 48px;
+        padding: 6px 8px;
+        border-radius: 13px;
         scroll-snap-align: start;
       }
 
       #standaloneGameList .avatar {
-        width: 38px;
-        height: 38px;
-        font-size: 19px;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
       }
 
       #standaloneGameList .list-item .title {
-        font-size: 13px;
+        font-size: 11px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
       #standaloneGameList .list-item .subtitle {
-        font-size: 11px;
+        display: none;
+        font-size: 10px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -994,50 +1023,57 @@
         flex: 1;
         min-height: 0;
         overflow: hidden;
-        padding: 10px;
+        padding: 6px;
       }
 
       #standaloneGameMount #gamePane {
-        gap: 10px;
+        gap: 6px;
         height: 100%;
       }
 
       .game-top {
         display: grid;
         grid-template-columns: 1fr;
-        padding: 12px;
-        border-radius: 18px;
+        gap: 7px;
+        padding: 8px;
+        border-radius: 14px;
       }
 
       .game-title {
-        font-size: 19px;
+        font-size: 15px;
       }
 
       .game-hint {
-        font-size: 11px;
+        font-size: 10px;
+        line-height: 1.25;
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       #gameStartBtn,
       #gameStopBtn {
         flex: 1 1 0;
         min-width: 0 !important;
-        padding: 11px 12px !important;
-        font-size: 12px;
+        padding: 8px 9px !important;
+        font-size: 10px;
       }
 
       #gameCanvas {
         flex: 1;
-        min-height: 300px;
+        min-height: 220px;
         height: auto;
-        max-height: calc(100dvh - 250px);
-        border-radius: 20px;
+        max-height: calc(100dvh - 176px);
+        border-radius: 15px;
       }
 
       .music-toggle {
-        right: 10px;
-        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-        padding: 9px 11px;
-        font-size: 12px;
+        right: 8px;
+        bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+        padding: 7px 9px;
+        font-size: 11px;
       }
     }
   </style>
