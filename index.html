@@ -546,6 +546,53 @@
       user-select: none;
     }
 
+    #standaloneGameList .list-item {
+      --game-accent: #00a884;
+      position: relative;
+      overflow: hidden;
+      min-height: 72px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--game-accent) 20%, transparent), rgba(255,255,255,0.035)),
+        rgba(255,255,255,0.035);
+      border-color: color-mix(in srgb, var(--game-accent) 30%, rgba(255,255,255,0.10));
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+    }
+
+    #standaloneGameList .list-item::before {
+      content: "";
+      position: absolute;
+      inset: -40% auto auto -20%;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, color-mix(in srgb, var(--game-accent) 55%, transparent), transparent 68%);
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    #standaloneGameList .list-item:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--game-accent) 62%, rgba(255,255,255,0.20));
+      box-shadow: 0 18px 48px rgba(0,0,0,0.28), 0 0 28px color-mix(in srgb, var(--game-accent) 22%, transparent);
+    }
+
+    #standaloneGameList .list-item.active {
+      border-color: color-mix(in srgb, var(--game-accent) 75%, white);
+      box-shadow:
+        0 18px 52px rgba(0,0,0,0.35),
+        0 0 0 2px color-mix(in srgb, var(--game-accent) 28%, transparent) inset,
+        0 0 34px color-mix(in srgb, var(--game-accent) 26%, transparent);
+    }
+
+    #standaloneGameList .avatar {
+      width: 44px;
+      height: 44px;
+      font-size: 22px;
+      background: color-mix(in srgb, var(--game-accent) 22%, rgba(17,27,33,0.85));
+      border-color: color-mix(in srgb, var(--game-accent) 58%, rgba(255,255,255,0.16));
+      box-shadow: 0 0 22px color-mix(in srgb, var(--game-accent) 24%, transparent);
+    }
+
     .badge {
       font-size: 11px;
       font-weight: 900;
@@ -575,8 +622,11 @@
       min-height: 0;
       display: none;
       flex-direction: column;
-      gap: 10px;
-      padding: 14px;
+      gap: 14px;
+      padding: 16px;
+      background:
+        radial-gradient(900px 380px at 12% 0%, rgba(0,168,132,0.16), transparent 62%),
+        radial-gradient(900px 420px at 90% 95%, rgba(83,189,235,0.14), transparent 60%);
     }
 
     .game-top {
@@ -585,14 +635,23 @@
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(17,27,33,0.92);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 12px 34px rgba(0,0,0,0.22);
+      padding: 14px 16px;
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.035)),
+        rgba(17,27,33,0.92);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,168,132,0.10) inset;
+      backdrop-filter: blur(16px);
     }
 
-    .game-title { font-weight: 1000; letter-spacing: 0.5px; }
+    .game-title {
+      font-weight: 1000;
+      letter-spacing: 0.5px;
+      font-size: clamp(20px, 2.2vw, 30px);
+      color: #f4fffb;
+      text-shadow: 0 0 22px rgba(0,168,132,0.24);
+    }
 
     #gameStartBtn,
     #gameStopBtn {
@@ -621,13 +680,16 @@
     #gameCanvas {
       width: 100%;
       height: min(64vh, 560px);
-      border-radius: 18px;
+      border-radius: 26px;
       background:
         radial-gradient(1100px 420px at 20% 0%, rgba(0,168,132,0.18), transparent 60%),
         radial-gradient(900px 520px at 80% 100%, rgba(83,189,235,0.12), transparent 55%),
         rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,0.58),
+        0 0 0 1px rgba(0,168,132,0.12) inset,
+        0 0 46px rgba(0,168,132,0.12);
       touch-action: none;
     }
 
@@ -846,7 +908,7 @@
         <button type="button" class="home-choice" id="homeGamesBtn">
           <span class="choice-icon">🎮</span>
           <div class="choice-title">Pelit</div>
-          <div class="choice-sub">Snake, Geometry runner, Brawl shooter, Block Blast, Asteroids, Tetris, Contra, Sonic, Super Mario ja Stardew Valley.</div>
+          <div class="choice-sub">20 minipeliä: klassikot, ajopelit, arcade-räiskintä, muistipeli, farmi ja paljon muuta.</div>
         </button>
         <button type="button" class="home-choice" id="homeChatBtn">
           <span class="choice-icon">💬</span>
@@ -1783,6 +1845,66 @@
       ctx.restore();
     }
 
+    function gameBackdrop(ctx, w, h, palette = ["#00a884", "#53bdeb"], mood = "dark") {
+      const t = performance.now() / 1000;
+      const base = mood === "light" ? "#dff8ff" : "#061016";
+      const glow1 = ctx.createRadialGradient(w * (0.18 + Math.sin(t * 0.28) * 0.05), h * 0.15, 10, w * 0.2, h * 0.18, Math.max(w, h) * 0.8);
+      glow1.addColorStop(0, palette[0] + "55");
+      glow1.addColorStop(1, "rgba(0,0,0,0)");
+      const glow2 = ctx.createRadialGradient(w * 0.82, h * (0.82 + Math.cos(t * 0.22) * 0.05), 20, w * 0.78, h * 0.82, Math.max(w, h) * 0.72);
+      glow2.addColorStop(0, palette[1] + "44");
+      glow2.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = glow1;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = glow2;
+      ctx.fillRect(0, 0, w, h);
+      bgGrid(ctx, w, h, mood === "light" ? 0.025 : 0.035);
+    }
+
+    function gameSparkles(ctx, w, h, color = "#00a884", count = 28) {
+      const t = performance.now() / 1000;
+      ctx.save();
+      ctx.fillStyle = color;
+      for (let i = 0; i < count; i++) {
+        const x = (i * 97 + t * 18 * (1 + (i % 3) * 0.25)) % (w + 80) - 40;
+        const y = (Math.sin(t * 0.7 + i * 1.9) * 0.5 + 0.5) * h;
+        ctx.globalAlpha = 0.08 + (i % 5) * 0.018;
+        ctx.beginPath();
+        ctx.arc(x, y, 1.3 + (i % 4) * 0.65, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function gameVignette(ctx, w, h) {
+      ctx.save();
+      const g = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.2, w / 2, h / 2, Math.max(w, h) * 0.72);
+      g.addColorStop(0, "rgba(0,0,0,0)");
+      g.addColorStop(1, "rgba(0,0,0,0.32)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = 2;
+      rr(ctx, 8, 8, w - 16, h - 16, 22);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function centerMessage(ctx, w, h, title, subtitle, color = "#00a884") {
+      ctx.save();
+      ctx.fillStyle = "rgba(5,12,18,0.68)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = color;
+      ctx.font = "1000 32px system-ui, -apple-system, Segoe UI, Roboto";
+      ctx.fillText(title, 24, 66);
+      ctx.fillStyle = "#e9edef";
+      ctx.font = "800 14px system-ui, -apple-system, Segoe UI, Roboto";
+      ctx.fillText(subtitle, 26, 94);
+      ctx.restore();
+    }
+
     function updateGameHeader() {
       const map = {
         brawl: {
@@ -1824,6 +1946,46 @@
         stardew: {
           title: "Stardew Valley farmi",
           hint: "Ohjaus: WASD/nuolet liiku · E/Space/klikkaus pellolla: istuta, kastele tai kerää sato."
+        },
+        pong: {
+          title: "Neon Pong",
+          hint: "Ohjaus: W/S tai hiiri liikuttaa mailaa · voita tekoäly nopeutuvassa ottelussa."
+        },
+        breakout: {
+          title: "Breakout Deluxe",
+          hint: "Ohjaus: ←/→ tai hiiri · riko kaikki palikat, ota pallot kiinni ja kerää comboja."
+        },
+        flappy: {
+          title: "Flappy Cloud",
+          hint: "Ohjaus: Space / ↑ / klikkaus · lennä porttien välistä mahdollisimman pitkälle."
+        },
+        racer: {
+          title: "Turbo Racer",
+          hint: "Ohjaus: ←/→ tai A/D · väistä autot, kerää boost-tähtiä ja pidä vauhti."
+        },
+        invaders: {
+          title: "Space Invaders",
+          hint: "Ohjaus: ←/→ tai A/D liiku · Space/klikkaus ammu · pysäytä avaruuslaivue."
+        },
+        memory: {
+          title: "Muistipeli Deluxe",
+          hint: "Ohjaus: klikkaa kortteja · löydä kaikki parit mahdollisimman vähillä siirroilla."
+        },
+        whack: {
+          title: "Whack-a-Mole",
+          hint: "Ohjaus: klikkaa ilmestyviä hahmoja · osu nopeasti, vältä pommeja."
+        },
+        frogger: {
+          title: "Frogger Road",
+          hint: "Ohjaus: nuolinäppäimet/WASD · ylitä tie ja joki turvallisesti."
+        },
+        bubble: {
+          title: "Bubble Pop",
+          hint: "Ohjaus: klikkaa kuplia · ketjuta poksahduksia ennen kuin aika loppuu."
+        },
+        target: {
+          title: "Aim Trainer",
+          hint: "Ohjaus: klikkaa tähtitauluja mahdollisimman nopeasti · pieni taulu antaa enemmän pisteitä."
         }
       };
       const info = map[activeGameKey] || map.brawl;
@@ -1833,16 +1995,26 @@
 
     function gameDefinitions() {
       return [
-        { key: "snake", name: "Käärmepeli", sub: "Nuolinäppäimet" },
-        { key: "gdash", name: "Geometry Dash runner", sub: "Space / ↑ hyppy, P pause" },
-        { key: "brawl", name: "Brawl Stars shooter", sub: "WASD + hiiri/Space" },
-        { key: "block", name: "Block Blast", sub: "Klikkaa ruutua ja täytä rivejä" },
-        { key: "asteroids", name: "Asteroids", sub: "↑, ←/→, Space" },
-        { key: "tetris", name: "Tetris", sub: "←/→, ↑, ↓, Space" },
-        { key: "contra", name: "Contra mini", sub: "A/D, W, J" },
-        { key: "sonic", name: "Sonic speed run", sub: "←/→ tai A/D, Space, Shift boost" },
-        { key: "mario", name: "Super Mario mini", sub: "←/→ tai A/D, Space hyppy" },
-        { key: "stardew", name: "Stardew Valley farmi", sub: "WASD + E/Space/klikkaus" },
+        { key: "snake", name: "Käärmepeli", sub: "Nuolinäppäimet", icon: "🐍", color: "#06cf9c" },
+        { key: "gdash", name: "Geometry Dash runner", sub: "Space / ↑ hyppy, P pause", icon: "🔷", color: "#53bdeb" },
+        { key: "brawl", name: "Brawl Stars shooter", sub: "WASD + hiiri/Space", icon: "🎯", color: "#00a884" },
+        { key: "block", name: "Block Blast", sub: "Klikkaa ruutua ja täytä rivejä", icon: "🧩", color: "#f8d14a" },
+        { key: "asteroids", name: "Asteroids", sub: "↑, ←/→, Space", icon: "☄️", color: "#53bdeb" },
+        { key: "tetris", name: "Tetris", sub: "←/→, ↑, ↓, Space", icon: "🧱", color: "#b388ff" },
+        { key: "contra", name: "Contra mini", sub: "A/D, W, J", icon: "🔫", color: "#ff6b6b" },
+        { key: "sonic", name: "Sonic speed run", sub: "←/→ tai A/D, Space, Shift boost", icon: "💨", color: "#2478ff" },
+        { key: "mario", name: "Super Mario mini", sub: "←/→ tai A/D, Space hyppy", icon: "🍄", color: "#e53935" },
+        { key: "stardew", name: "Stardew Valley farmi", sub: "WASD + E/Space/klikkaus", icon: "🌾", color: "#77c86b" },
+        { key: "pong", name: "Neon Pong", sub: "W/S tai hiiri", icon: "🏓", color: "#00e5ff" },
+        { key: "breakout", name: "Breakout Deluxe", sub: "←/→ tai hiiri", icon: "💎", color: "#ff9f43" },
+        { key: "flappy", name: "Flappy Cloud", sub: "Space / ↑ / klikkaus", icon: "🐤", color: "#ffd166" },
+        { key: "racer", name: "Turbo Racer", sub: "←/→ tai A/D", icon: "🏎️", color: "#ff4d6d" },
+        { key: "invaders", name: "Space Invaders", sub: "←/→ + Space", icon: "👾", color: "#9d4edd" },
+        { key: "memory", name: "Muistipeli Deluxe", sub: "Klikkaa kortteja", icon: "🃏", color: "#4cc9f0" },
+        { key: "whack", name: "Whack-a-Mole", sub: "Klikkaa nopeasti", icon: "🔨", color: "#f3722c" },
+        { key: "frogger", name: "Frogger Road", sub: "Nuolinäppäimet/WASD", icon: "🐸", color: "#80ed99" },
+        { key: "bubble", name: "Bubble Pop", sub: "Klikkaa kuplia", icon: "🫧", color: "#64dfdf" },
+        { key: "target", name: "Aim Trainer", sub: "Klikkaa tauluja", icon: "🎯", color: "#ff006e" },
       ];
     }
 
@@ -1853,8 +2025,9 @@
         const item = document.createElement("button");
         item.type = "button";
         item.className = "list-item" + (activeGameKey === g.key ? " active" : "");
+        item.style.setProperty("--game-accent", g.color || "#00a884");
         item.innerHTML = `<div style="display:flex;align-items:center;gap:10px;min-width:0;">
-            <div class="avatar">🎮</div>
+            <div class="avatar">${g.icon || "🎮"}</div>
             <div style="min-width:0;">
               <div class="title">${g.name}</div>
               <div class="subtitle">${g.sub}</div>
@@ -1903,6 +2076,16 @@
       if (activeGameKey === "sonic") sonicReset();
       if (activeGameKey === "mario") marioReset();
       if (activeGameKey === "stardew") stardewReset();
+      if (activeGameKey === "pong") pongReset();
+      if (activeGameKey === "breakout") breakoutReset();
+      if (activeGameKey === "flappy") flappyReset();
+      if (activeGameKey === "racer") racerReset();
+      if (activeGameKey === "invaders") invadersReset();
+      if (activeGameKey === "memory") memoryReset();
+      if (activeGameKey === "whack") whackReset();
+      if (activeGameKey === "frogger") froggerReset();
+      if (activeGameKey === "bubble") bubbleReset();
+      if (activeGameKey === "target") targetReset();
       gameLast = performance.now();
       gameLoop(gameLast);
     }
@@ -1922,6 +2105,8 @@
       if (activeGameKey === "sonic" && ["ArrowUp","ArrowLeft","ArrowRight"," ","w","W","a","A","d","D"].includes(e.key)) e.preventDefault();
       if (activeGameKey === "mario" && ["ArrowUp","ArrowLeft","ArrowRight"," ","w","W","a","A","d","D"].includes(e.key)) e.preventDefault();
       if (activeGameKey === "stardew" && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," ","e","E","w","W","a","A","s","S","d","D"].includes(e.key)) e.preventDefault();
+      const arcadeKeys = ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," ","w","W","a","A","s","S","d","D"];
+      if (["pong","breakout","flappy","racer","invaders","frogger"].includes(activeGameKey) && arcadeKeys.includes(e.key)) e.preventDefault();
     });
     safeOn(window, "keyup", (e) => keys.delete(e.key));
 
@@ -1956,6 +2141,17 @@
       if (activeGameKey === "sonic") sonicUpdate(ctx, w, h, dt);
       if (activeGameKey === "mario") marioUpdate(ctx, w, h, dt);
       if (activeGameKey === "stardew") stardewUpdate(ctx, w, h, dt);
+      if (activeGameKey === "pong") pongUpdate(ctx, w, h, dt);
+      if (activeGameKey === "breakout") breakoutUpdate(ctx, w, h, dt);
+      if (activeGameKey === "flappy") flappyUpdate(ctx, w, h, dt);
+      if (activeGameKey === "racer") racerUpdate(ctx, w, h, dt);
+      if (activeGameKey === "invaders") invadersUpdate(ctx, w, h, dt);
+      if (activeGameKey === "memory") memoryUpdate(ctx, w, h, dt);
+      if (activeGameKey === "whack") whackUpdate(ctx, w, h, dt);
+      if (activeGameKey === "frogger") froggerUpdate(ctx, w, h, dt);
+      if (activeGameKey === "bubble") bubbleUpdate(ctx, w, h, dt);
+      if (activeGameKey === "target") targetUpdate(ctx, w, h, dt);
+      gameVignette(ctx, w, h);
 
       gameRAF = requestAnimationFrame(gameLoop);
     }
@@ -3334,6 +3530,472 @@
       ctx.font = "800 12px system-ui";
       ctx.fillText("Toimi pellolla:", w - 218, 38);
       ctx.fillText("1. Istuta  2. Kastele  3. Kerää", w - 218, 58);
+    }
+
+    // -------- Neon Pong --------
+    let pong = {};
+    function pongReset() {
+      pong = { py: 230, ay: 230, ball: { x: 420, y: 240, vx: 360, vy: 190 }, ps: 0, as: 0, over: false };
+    }
+    function pongServe(dir, w, h) {
+      pong.ball = { x: w / 2, y: h / 2, vx: dir * (330 + Math.random() * 110), vy: (Math.random() - 0.5) * 330 };
+    }
+    function pongUpdate(ctx, w, h, dt) {
+      if (!pong.ball) pongReset();
+      gameBackdrop(ctx, w, h, ["#00e5ff", "#ff4dff"]);
+      gameSparkles(ctx, w, h, "#00e5ff", 34);
+      const ph = 94, pw = 14;
+      if (!pong.over) {
+        if (keys.has("w") || keys.has("W")) pong.py -= 420 * dt;
+        if (keys.has("s") || keys.has("S")) pong.py += 420 * dt;
+        if (mouse.y > 0) pong.py += (mouse.y - pong.py) * Math.min(1, dt * 7);
+        pong.py = Math.max(ph / 2 + 12, Math.min(h - ph / 2 - 12, pong.py));
+        pong.ay += (pong.ball.y - pong.ay) * Math.min(1, dt * (4.4 + pong.as * 0.45));
+        pong.ay = Math.max(ph / 2 + 12, Math.min(h - ph / 2 - 12, pong.ay));
+        const b = pong.ball;
+        b.x += b.vx * dt; b.y += b.vy * dt;
+        if (b.y < 18 || b.y > h - 18) { b.vy *= -1; b.y = Math.max(18, Math.min(h - 18, b.y)); }
+        if (b.x < 46 && Math.abs(b.y - pong.py) < ph / 2) { b.vx = Math.abs(b.vx) * 1.06; b.vy += (b.y - pong.py) * 5; b.x = 46; }
+        if (b.x > w - 46 && Math.abs(b.y - pong.ay) < ph / 2) { b.vx = -Math.abs(b.vx) * 1.06; b.vy += (b.y - pong.ay) * 5; b.x = w - 46; }
+        if (b.x < -20) { pong.as++; pongServe(1, w, h); }
+        if (b.x > w + 20) { pong.ps++; pongServe(-1, w, h); }
+        if (pong.ps >= 5 || pong.as >= 5) pong.over = true;
+      }
+      ctx.strokeStyle = "rgba(255,255,255,0.16)"; ctx.setLineDash([12, 14]); ctx.beginPath(); ctx.moveTo(w / 2, 22); ctx.lineTo(w / 2, h - 22); ctx.stroke(); ctx.setLineDash([]);
+      ctx.shadowBlur = 22; ctx.shadowColor = "#00e5ff"; ctx.fillStyle = "#00e5ff"; rr(ctx, 26, pong.py - ph / 2, pw, ph, 8); ctx.fill();
+      ctx.shadowColor = "#ff4dff"; ctx.fillStyle = "#ff4dff"; rr(ctx, w - 40, pong.ay - ph / 2, pw, ph, 8); ctx.fill();
+      ctx.shadowColor = "#ffffff"; ctx.fillStyle = "#e9edef"; ctx.beginPath(); ctx.arc(pong.ball.x, pong.ball.y, 9, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+      hud(ctx, ["Neon Pong", `Sinä ${pong.ps} - ${pong.as} CPU`], "#00e5ff");
+      if (pong.over) centerMessage(ctx, w, h, pong.ps > pong.as ? "Voitit!" : "CPU voitti", "Paina Käynnistä uuteen otteluun.", "#00e5ff");
+    }
+
+    // -------- Breakout Deluxe --------
+    let breakout = {};
+    function breakoutReset() {
+      const cols = 9, rows = 5;
+      breakout = {
+        paddle: 420, ball: { x: 420, y: 360, vx: 260, vy: -330 }, score: 0, lives: 3, combo: 0, over: false, won: false,
+        bricks: Array.from({ length: rows * cols }, (_, i) => ({ c: i % cols, r: Math.floor(i / cols), hp: 1 + (Math.floor(i / cols) % 2), hit: false }))
+      };
+    }
+    function breakoutUpdate(ctx, w, h, dt) {
+      if (!breakout.bricks) breakoutReset();
+      gameBackdrop(ctx, w, h, ["#ff9f43", "#53bdeb"]);
+      const paddleW = 118, paddleY = h - 54;
+      if (!breakout.over) {
+        if (mouse.x > 0) breakout.paddle += (mouse.x - breakout.paddle) * Math.min(1, dt * 10);
+        if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) breakout.paddle -= 460 * dt;
+        if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) breakout.paddle += 460 * dt;
+        breakout.paddle = Math.max(paddleW / 2 + 12, Math.min(w - paddleW / 2 - 12, breakout.paddle));
+        const b = breakout.ball;
+        b.x += b.vx * dt; b.y += b.vy * dt;
+        if (b.x < 14 || b.x > w - 14) b.vx *= -1;
+        if (b.y < 14) b.vy = Math.abs(b.vy);
+        if (b.y > h + 24) {
+          breakout.lives--; breakout.combo = 0;
+          b.x = w / 2; b.y = h - 120; b.vx = 240 * (Math.random() < 0.5 ? -1 : 1); b.vy = -330;
+          if (breakout.lives <= 0) breakout.over = true;
+        }
+        if (b.y > paddleY - 16 && b.y < paddleY + 14 && Math.abs(b.x - breakout.paddle) < paddleW / 2) {
+          b.vy = -Math.abs(b.vy) * 1.02;
+          b.vx += (b.x - breakout.paddle) * 5;
+        }
+        const bw = Math.min(78, (w - 120) / 9), bh = 28, ox = (w - bw * 9) / 2, oy = 74;
+        breakout.bricks.forEach((br) => {
+          if (br.hit) return;
+          const x = ox + br.c * bw, y = oy + br.r * (bh + 10);
+          if (b.x > x && b.x < x + bw - 8 && b.y > y && b.y < y + bh) {
+            br.hp--; b.vy *= -1; breakout.combo++;
+            breakout.score += 10 + breakout.combo * 2;
+            if (br.hp <= 0) br.hit = true;
+          }
+        });
+        if (breakout.bricks.every((br) => br.hit)) { breakout.won = true; breakout.over = true; }
+      }
+      const bw = Math.min(78, (w - 120) / 9), bh = 28, ox = (w - bw * 9) / 2, oy = 74;
+      breakout.bricks.forEach((br) => {
+        if (br.hit) return;
+        const x = ox + br.c * bw, y = oy + br.r * (bh + 10);
+        ctx.fillStyle = br.hp > 1 ? "#ff9f43" : ["#00a884", "#53bdeb", "#b388ff", "#f8d14a", "#ff6b6b"][br.r];
+        ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12; rr(ctx, x, y, bw - 8, bh, 8); ctx.fill(); ctx.shadowBlur = 0;
+      });
+      ctx.fillStyle = "#e9edef"; rr(ctx, breakout.paddle - paddleW / 2, paddleY, paddleW, 14, 8); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(breakout.ball.x, breakout.ball.y, 8, 0, Math.PI * 2); ctx.fill();
+      hud(ctx, ["Breakout Deluxe", `Score: ${breakout.score}`, `Lives: ${breakout.lives}`, `Combo: ${breakout.combo}`], "#ff9f43");
+      if (breakout.over) centerMessage(ctx, w, h, breakout.won ? "Kaikki palikat rikki!" : "Pallo karkasi!", "Paina Käynnistä uudelleen.", "#ff9f43");
+    }
+
+    // -------- Flappy Cloud --------
+    let flappy = {};
+    function flappyReset() {
+      flappy = { y: 220, vy: 0, pipes: [], spawn: 0, score: 0, over: false, lock: false };
+    }
+    function flappyUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(flappy.pipes)) flappyReset();
+      gameBackdrop(ctx, w, h, ["#ffd166", "#64dfdf"], "light");
+      ctx.fillStyle = "rgba(255,255,255,0.78)";
+      for (let i = 0; i < 7; i++) { const x = (i * 190 - performance.now() / 45) % (w + 120) - 80; ctx.beginPath(); ctx.ellipse(x, 70 + (i % 3) * 42, 50, 17, 0, 0, Math.PI * 2); ctx.fill(); }
+      const pressed = keys.has(" ") || keys.has("ArrowUp") || mouse.down;
+      if (!flappy.over && pressed && !flappy.lock) { flappy.vy = -390; flappy.lock = true; }
+      if (!pressed) flappy.lock = false;
+      if (!flappy.over) {
+        flappy.vy += 900 * dt; flappy.y += flappy.vy * dt;
+        flappy.spawn -= dt;
+        if (flappy.spawn <= 0) {
+          const gap = 145, top = 80 + Math.random() * (h - 250);
+          flappy.pipes.push({ x: w + 40, top, gap, passed: false });
+          flappy.spawn = 1.35;
+        }
+        flappy.pipes.forEach((p) => p.x -= 230 * dt);
+        flappy.pipes = flappy.pipes.filter((p) => p.x > -80);
+        for (const p of flappy.pipes) {
+          if (!p.passed && p.x < 90) { p.passed = true; flappy.score++; }
+          if (Math.abs(90 - p.x) < 32 && (flappy.y < p.top || flappy.y > p.top + p.gap)) flappy.over = true;
+        }
+        if (flappy.y < 18 || flappy.y > h - 28) flappy.over = true;
+      }
+      flappy.pipes.forEach((p) => {
+        ctx.fillStyle = "#00a884"; rr(ctx, p.x - 26, 0, 52, p.top, 12); ctx.fill(); rr(ctx, p.x - 26, p.top + p.gap, 52, h - p.top - p.gap, 12); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.25)"; ctx.fillRect(p.x - 13, 8, 7, Math.max(0, p.top - 16)); ctx.fillRect(p.x - 13, p.top + p.gap + 8, 7, h);
+      });
+      ctx.save(); ctx.translate(90, flappy.y); ctx.rotate(Math.max(-0.6, Math.min(0.8, flappy.vy / 520)));
+      ctx.fillStyle = "#ffd166"; ctx.beginPath(); ctx.ellipse(0, 0, 22, 17, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ff9f43"; ctx.beginPath(); ctx.moveTo(18, -2); ctx.lineTo(34, 5); ctx.lineTo(18, 12); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#111b21"; ctx.beginPath(); ctx.arc(8, -5, 3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      hud(ctx, ["Flappy Cloud", `Score: ${flappy.score}`], "#ffd166");
+      if (flappy.over) centerMessage(ctx, w, h, "Putosit pilvistä!", "Paina Käynnistä uudelleen.", "#ffd166");
+    }
+
+    // -------- Turbo Racer --------
+    let racer = {};
+    function racerReset() {
+      racer = { x: 0.5, cars: [], stars: [], spawn: 0, starSpawn: 1.8, score: 0, speed: 320, over: false };
+    }
+    function racerUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(racer.cars)) racerReset();
+      gameBackdrop(ctx, w, h, ["#ff4d6d", "#f8d14a"]);
+      const roadW = Math.min(520, w * 0.66), ox = (w - roadW) / 2;
+      ctx.fillStyle = "#161f27"; rr(ctx, ox, -20, roadW, h + 40, 30); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.14)";
+      for (let i = 1; i < 4; i++) ctx.fillRect(ox + roadW * i / 4 - 2, 0, 4, h);
+      for (let y = (performance.now() / 4) % 80 - 80; y < h; y += 80) { ctx.fillStyle = "#f8d14a"; rr(ctx, w / 2 - 4, y, 8, 38, 4); ctx.fill(); }
+      if (!racer.over) {
+        if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) racer.x -= dt * 0.85;
+        if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) racer.x += dt * 0.85;
+        if (mouse.x > 0) racer.x += ((mouse.x - ox) / roadW - racer.x) * Math.min(1, dt * 4);
+        racer.x = Math.max(0.09, Math.min(0.91, racer.x));
+        racer.speed = Math.min(620, racer.speed + dt * 12);
+        racer.score += dt * racer.speed * 0.05;
+        racer.spawn -= dt; racer.starSpawn -= dt;
+        if (racer.spawn <= 0) { racer.cars.push({ lane: Math.floor(Math.random() * 4), y: -70, sp: racer.speed * (0.8 + Math.random() * 0.35) }); racer.spawn = Math.max(0.38, 0.9 - racer.score / 2600); }
+        if (racer.starSpawn <= 0) { racer.stars.push({ x: 0.16 + Math.random() * 0.68, y: -40 }); racer.starSpawn = 2.4; }
+        racer.cars.forEach((c) => c.y += c.sp * dt);
+        racer.stars.forEach((s) => s.y += racer.speed * dt);
+        racer.cars = racer.cars.filter((c) => c.y < h + 90);
+        racer.stars = racer.stars.filter((s) => s.y < h + 60);
+      }
+      const px = ox + racer.x * roadW, py = h - 86;
+      racer.cars.forEach((c) => {
+        const cx = ox + roadW * (c.lane + 0.5) / 4;
+        ctx.fillStyle = "#ff4d6d"; rr(ctx, cx - 24, c.y - 34, 48, 68, 12); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.55)"; ctx.fillRect(cx - 14, c.y - 22, 28, 10);
+        if (!racer.over && Math.abs(px - cx) < 42 && Math.abs(py - c.y) < 66) racer.over = true;
+      });
+      racer.stars.forEach((s) => {
+        const sx = ox + s.x * roadW;
+        ctx.fillStyle = "#f8d14a"; ctx.beginPath();
+        for (let i = 0; i < 10; i++) { const a = -Math.PI/2 + i * Math.PI/5, r = i % 2 ? 8 : 17; ctx.lineTo(sx + Math.cos(a) * r, s.y + Math.sin(a) * r); }
+        ctx.closePath(); ctx.fill();
+        if (!racer.over && Math.hypot(px - sx, py - s.y) < 38) { s.y = h + 99; racer.score += 250; racer.speed += 45; }
+      });
+      ctx.fillStyle = "#53bdeb"; rr(ctx, px - 24, py - 36, 48, 72, 13); ctx.fill();
+      ctx.fillStyle = "#e9edef"; ctx.fillRect(px - 13, py - 24, 26, 14);
+      hud(ctx, ["Turbo Racer", `Score: ${Math.floor(racer.score)}`, `Speed: ${Math.floor(racer.speed)}`], "#ff4d6d");
+      if (racer.over) centerMessage(ctx, w, h, "Kolari!", "Paina Käynnistä ja aja uudelleen.", "#ff4d6d");
+    }
+
+    // -------- Space Invaders --------
+    let inv = {};
+    function invadersReset() {
+      inv = { x: 420, bullets: [], ebullets: [], dir: 1, step: 0, cd: 0, score: 0, over: false, won: false, lock: {}, enemies: [] };
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 9; c++) inv.enemies.push({ x: 130 + c * 54, y: 72 + r * 42, alive: true });
+    }
+    function invadersTap(key) {
+      if (inv.lock[key] && keys.has(key)) return false;
+      if (keys.has(key)) { inv.lock[key] = true; return true; }
+      inv.lock[key] = false; return false;
+    }
+    function invadersUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(inv.enemies)) invadersReset();
+      gameBackdrop(ctx, w, h, ["#9d4edd", "#00e5ff"]);
+      if (!inv.over) {
+        if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) inv.x -= 360 * dt;
+        if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) inv.x += 360 * dt;
+        inv.x = Math.max(28, Math.min(w - 28, inv.x));
+        inv.cd = Math.max(0, inv.cd - dt);
+        if ((invadersTap(" ") || mouse.down) && inv.cd <= 0) { inv.bullets.push({ x: inv.x, y: h - 72, vy: -520 }); inv.cd = 0.22; }
+        const living = inv.enemies.filter((e) => e.alive);
+        inv.step += dt * (34 + (36 - living.length) * 1.7);
+        if (inv.step > 1) {
+          inv.step = 0;
+          let edge = false;
+          living.forEach((e) => { e.x += inv.dir * 14; if (e.x < 36 || e.x > w - 36) edge = true; });
+          if (edge) { inv.dir *= -1; living.forEach((e) => e.y += 22); }
+        }
+        if (living.length && Math.random() < dt * 1.3) {
+          const e = living[Math.floor(Math.random() * living.length)];
+          inv.ebullets.push({ x: e.x, y: e.y + 16, vy: 260 });
+        }
+        inv.bullets.forEach((b) => b.y += b.vy * dt);
+        inv.ebullets.forEach((b) => b.y += b.vy * dt);
+        inv.bullets = inv.bullets.filter((b) => b.y > -30);
+        inv.ebullets = inv.ebullets.filter((b) => b.y < h + 30);
+        for (const b of inv.bullets) for (const e of inv.enemies) {
+          if (e.alive && Math.abs(b.x - e.x) < 22 && Math.abs(b.y - e.y) < 18) { e.alive = false; b.y = -99; inv.score += 50; }
+        }
+        for (const b of inv.ebullets) if (Math.abs(b.x - inv.x) < 24 && Math.abs(b.y - (h - 62)) < 18) inv.over = true;
+        if (inv.enemies.every((e) => !e.alive)) { inv.won = true; inv.over = true; }
+        if (living.some((e) => e.y > h - 120)) inv.over = true;
+      }
+      inv.enemies.forEach((e) => {
+        if (!e.alive) return;
+        ctx.fillStyle = "#9d4edd"; ctx.beginPath(); ctx.ellipse(e.x, e.y, 20, 14, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#e9edef"; ctx.fillRect(e.x - 9, e.y - 3, 5, 4); ctx.fillRect(e.x + 4, e.y - 3, 5, 4);
+      });
+      ctx.fillStyle = "#f8d14a"; inv.bullets.forEach((b) => { rr(ctx, b.x - 3, b.y - 12, 6, 18, 3); ctx.fill(); });
+      ctx.fillStyle = "#ff6b6b"; inv.ebullets.forEach((b) => { rr(ctx, b.x - 3, b.y - 8, 6, 16, 3); ctx.fill(); });
+      ctx.fillStyle = "#00e5ff"; rr(ctx, inv.x - 24, h - 62, 48, 20, 8); ctx.fill(); ctx.fillRect(inv.x - 5, h - 78, 10, 18);
+      hud(ctx, ["Space Invaders", `Score: ${inv.score}`, `Jäljellä: ${inv.enemies.filter((e) => e.alive).length}`], "#9d4edd");
+      if (inv.over) centerMessage(ctx, w, h, inv.won ? "Galaksi pelastettu!" : "Alus tuhottu!", "Paina Käynnistä uudelleen.", "#9d4edd");
+    }
+
+    // -------- Muistipeli Deluxe --------
+    let memory = {};
+    function memoryReset() {
+      const faces = ["🍎","🚀","⭐","🐸","🎲","💎","🌈","⚡"];
+      const cards = [...faces, ...faces].sort(() => Math.random() - 0.5).map((face, i) => ({ face, i, open: false, done: false }));
+      memory = { cards, first: null, second: null, wait: 0, moves: 0, won: false };
+    }
+    function memoryLayout(w, h) {
+      const cols = 4, rows = 4, gap = 12, size = Math.min((w - 80 - gap * 3) / cols, (h - 120 - gap * 3) / rows, 92);
+      const ox = (w - cols * size - (cols - 1) * gap) / 2, oy = 82;
+      return { cols, gap, size, ox, oy };
+    }
+    function memoryClick(x, y, w, h) {
+      if (!memory.cards || memory.wait > 0 || memory.won) return;
+      const l = memoryLayout(w, h);
+      const cx = Math.floor((x - l.ox) / (l.size + l.gap)), cy = Math.floor((y - l.oy) / (l.size + l.gap));
+      const idx = cy * l.cols + cx;
+      const card = memory.cards[idx];
+      if (!card || card.done || card.open) return;
+      card.open = true;
+      if (memory.first === null) memory.first = idx;
+      else {
+        memory.second = idx; memory.moves++;
+        const a = memory.cards[memory.first], b = memory.cards[memory.second];
+        if (a.face === b.face) { a.done = true; b.done = true; memory.first = null; memory.second = null; if (memory.cards.every((c) => c.done)) memory.won = true; }
+        else memory.wait = 0.75;
+      }
+    }
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      if (activeGameKey !== "memory") return;
+      const rect = gameCanvasEl.getBoundingClientRect();
+      memoryClick(e.clientX - rect.left, e.clientY - rect.top, rect.width, rect.height);
+    });
+    function memoryUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(memory.cards)) memoryReset();
+      gameBackdrop(ctx, w, h, ["#4cc9f0", "#b388ff"]);
+      if (memory.wait > 0) {
+        memory.wait -= dt;
+        if (memory.wait <= 0) { memory.cards[memory.first].open = false; memory.cards[memory.second].open = false; memory.first = null; memory.second = null; }
+      }
+      const l = memoryLayout(w, h);
+      memory.cards.forEach((c, i) => {
+        const x = l.ox + (i % l.cols) * (l.size + l.gap), y = l.oy + Math.floor(i / l.cols) * (l.size + l.gap);
+        const open = c.open || c.done;
+        ctx.fillStyle = open ? "rgba(255,255,255,0.92)" : "rgba(76,201,240,0.22)";
+        ctx.strokeStyle = c.done ? "#80ed99" : "rgba(255,255,255,0.18)";
+        rr(ctx, x, y, l.size, l.size, 18); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = open ? "#111b21" : "#e9edef";
+        ctx.font = `${Math.floor(l.size * 0.42)}px system-ui`;
+        ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(open ? c.face : "?", x + l.size / 2, y + l.size / 2); ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+      });
+      hud(ctx, ["Muistipeli Deluxe", `Siirrot: ${memory.moves}`, `Parit: ${memory.cards.filter((c) => c.done).length / 2}/8`], "#4cc9f0");
+      if (memory.won) centerMessage(ctx, w, h, "Kaikki parit löytyivät!", `Siirrot: ${memory.moves}. Paina Käynnistä uudelleen.`, "#4cc9f0");
+    }
+
+    // -------- Whack-a-Mole --------
+    let whack = {};
+    function whackReset() {
+      whack = { holes: [], active: [], spawn: 0, score: 0, time: 35, over: false };
+    }
+    function whackEnsureHoles(w, h) {
+      if (whack.holes.length) return;
+      const sx = w / 2 - 170, sy = 130;
+      for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++) whack.holes.push({ x: sx + x * 170, y: sy + y * 100 });
+    }
+    function whackClick(x, y) {
+      if (whack.over) return;
+      for (const m of whack.active) {
+        const hole = whack.holes[m.i];
+        if (hole && Math.hypot(x - hole.x, y - hole.y) < 44) {
+          if (m.kind === "bomb") whack.over = true;
+          else whack.score += Math.ceil(20 * m.life);
+          m.life = -1;
+        }
+      }
+    }
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      if (activeGameKey !== "whack") return;
+      const rect = gameCanvasEl.getBoundingClientRect();
+      whackClick(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    function whackUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(whack.active)) whackReset();
+      whackEnsureHoles(w, h);
+      gameBackdrop(ctx, w, h, ["#f3722c", "#f8d14a"]);
+      if (!whack.over) {
+        whack.time -= dt; whack.spawn -= dt;
+        if (whack.spawn <= 0) {
+          whack.active.push({ i: Math.floor(Math.random() * whack.holes.length), life: 1.05, kind: Math.random() < 0.15 ? "bomb" : "mole" });
+          whack.spawn = Math.max(0.32, 0.78 - whack.score / 1500);
+        }
+        if (whack.time <= 0) whack.over = true;
+      }
+      whack.active.forEach((m) => m.life -= dt);
+      whack.active = whack.active.filter((m) => m.life > 0);
+      whack.holes.forEach((hole) => {
+        ctx.fillStyle = "#5a3218"; ctx.beginPath(); ctx.ellipse(hole.x, hole.y + 24, 58, 22, 0, 0, Math.PI * 2); ctx.fill();
+      });
+      whack.active.forEach((m) => {
+        const hole = whack.holes[m.i], pop = Math.sin(Math.min(1, m.life) * Math.PI);
+        ctx.fillStyle = m.kind === "bomb" ? "#111b21" : "#c78243";
+        ctx.beginPath(); ctx.ellipse(hole.x, hole.y + 20 - pop * 38, 30, 28, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = m.kind === "bomb" ? "#ff4d6d" : "#111b21";
+        ctx.beginPath(); ctx.arc(hole.x - 9, hole.y + 10 - pop * 38, 4, 0, Math.PI * 2); ctx.arc(hole.x + 9, hole.y + 10 - pop * 38, 4, 0, Math.PI * 2); ctx.fill();
+      });
+      hud(ctx, ["Whack-a-Mole", `Score: ${whack.score}`, `Aika: ${Math.max(0, Math.ceil(whack.time))}`], "#f3722c");
+      if (whack.over) centerMessage(ctx, w, h, "Peli päättyi!", `Pisteet: ${whack.score}. Paina Käynnistä uudelleen.`, "#f3722c");
+    }
+
+    // -------- Frogger Road --------
+    let frogger = {};
+    function froggerReset() {
+      frogger = { x: 5, y: 8, lock: {}, score: 0, lives: 3, over: false, won: false, cars: [], logs: [] };
+      for (let r = 0; r < 3; r++) for (let i = 0; i < 4; i++) frogger.cars.push({ row: 5 + r, x: i * 260 + r * 80, sp: (r % 2 ? -1 : 1) * (120 + r * 45) });
+      for (let r = 0; r < 3; r++) for (let i = 0; i < 3; i++) frogger.logs.push({ row: 1 + r, x: i * 330 + r * 90, sp: (r % 2 ? 95 : -115), w: 120 + r * 20 });
+    }
+    function frogTap(key) {
+      if (frogger.lock[key] && (keys.has(key) || keys.has(key.toUpperCase()))) return false;
+      if (keys.has(key) || keys.has(key.toUpperCase())) { frogger.lock[key] = true; return true; }
+      frogger.lock[key] = false; return false;
+    }
+    function froggerUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(frogger.cars)) froggerReset();
+      const rows = 9, cell = Math.min(w / 11, h / 10), ox = (w - cell * 11) / 2, oy = 42;
+      gameBackdrop(ctx, w, h, ["#80ed99", "#53bdeb"]);
+      if (!frogger.over) {
+        if (frogTap("ArrowUp") || frogTap("w")) frogger.y--;
+        if (frogTap("ArrowDown") || frogTap("s")) frogger.y++;
+        if (frogTap("ArrowLeft") || frogTap("a")) frogger.x--;
+        if (frogTap("ArrowRight") || frogTap("d")) frogger.x++;
+        frogger.x = Math.max(0, Math.min(10, frogger.x)); frogger.y = Math.max(0, Math.min(8, frogger.y));
+        frogger.cars.forEach((c) => { c.x += c.sp * dt; if (c.x < -140) c.x = w + 80; if (c.x > w + 140) c.x = -80; });
+        frogger.logs.forEach((l) => { l.x += l.sp * dt; if (l.x < -180) l.x = w + 100; if (l.x > w + 180) l.x = -100; });
+        const fx = ox + frogger.x * cell + cell / 2, fy = oy + frogger.y * cell + cell / 2;
+        for (const c of frogger.cars) if (c.row === frogger.y && Math.abs(fx - c.x) < 45) { frogger.lives--; frogger.x = 5; frogger.y = 8; if (frogger.lives <= 0) frogger.over = true; }
+        if (frogger.y >= 1 && frogger.y <= 3) {
+          const log = frogger.logs.find((l) => l.row === frogger.y && fx > l.x - l.w / 2 && fx < l.x + l.w / 2);
+          if (log) { frogger.x += log.sp * dt / cell; } else { frogger.lives--; frogger.x = 5; frogger.y = 8; if (frogger.lives <= 0) frogger.over = true; }
+        }
+        if (frogger.y === 0) { frogger.score += 100; frogger.won = true; frogger.over = true; }
+      }
+      for (let r = 0; r < rows; r++) {
+        ctx.fillStyle = r === 0 || r === 4 || r === 8 ? "#2c8f44" : r < 4 ? "#1b78b0" : "#30343b";
+        ctx.fillRect(ox, oy + r * cell, cell * 11, cell);
+      }
+      frogger.logs.forEach((l) => { ctx.fillStyle = "#8b5a2b"; rr(ctx, l.x - l.w / 2, oy + l.row * cell + 14, l.w, cell - 28, 12); ctx.fill(); });
+      frogger.cars.forEach((c) => { ctx.fillStyle = c.sp > 0 ? "#ff4d6d" : "#f8d14a"; rr(ctx, c.x - 34, oy + c.row * cell + 13, 68, cell - 26, 12); ctx.fill(); });
+      const fx = ox + frogger.x * cell + cell / 2, fy = oy + frogger.y * cell + cell / 2;
+      ctx.fillStyle = "#80ed99"; ctx.beginPath(); ctx.ellipse(fx, fy, 22, 18, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#111b21"; ctx.beginPath(); ctx.arc(fx - 8, fy - 8, 4, 0, Math.PI * 2); ctx.arc(fx + 8, fy - 8, 4, 0, Math.PI * 2); ctx.fill();
+      hud(ctx, ["Frogger Road", `Elämät: ${frogger.lives}`, `Score: ${frogger.score}`], "#80ed99");
+      if (frogger.over) centerMessage(ctx, w, h, frogger.won ? "Pääsit perille!" : "Sammakko jäi matkalle!", "Paina Käynnistä uudelleen.", "#80ed99");
+    }
+
+    // -------- Bubble Pop --------
+    let bubble = {};
+    function bubbleReset() {
+      bubble = { bubbles: [], spawn: 0, score: 0, time: 40, over: false };
+    }
+    function bubbleClick(x, y) {
+      if (bubble.over) return;
+      for (const b of bubble.bubbles) {
+        if (Math.hypot(x - b.x, y - b.y) < b.r) { b.dead = true; bubble.score += Math.max(5, Math.floor(60 - b.r)); }
+      }
+    }
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      if (activeGameKey !== "bubble") return;
+      const rect = gameCanvasEl.getBoundingClientRect();
+      bubbleClick(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    function bubbleUpdate(ctx, w, h, dt) {
+      if (!Array.isArray(bubble.bubbles)) bubbleReset();
+      gameBackdrop(ctx, w, h, ["#64dfdf", "#b388ff"]);
+      if (!bubble.over) {
+        bubble.time -= dt; bubble.spawn -= dt;
+        if (bubble.spawn <= 0) { bubble.bubbles.push({ x: 40 + Math.random() * (w - 80), y: h + 30, r: 16 + Math.random() * 20, vy: 70 + Math.random() * 110, hue: Math.random() * 360 }); bubble.spawn = 0.24; }
+        bubble.bubbles.forEach((b) => { b.y -= b.vy * dt; b.r += dt * 1.8; });
+        bubble.bubbles = bubble.bubbles.filter((b) => !b.dead && b.y > -80);
+        if (bubble.time <= 0) bubble.over = true;
+      }
+      bubble.bubbles.forEach((b) => {
+        const g = ctx.createRadialGradient(b.x - b.r * 0.3, b.y - b.r * 0.3, 3, b.x, b.y, b.r);
+        g.addColorStop(0, "rgba(255,255,255,0.85)");
+        g.addColorStop(0.35, `hsla(${b.hue}, 90%, 70%, 0.38)`);
+        g.addColorStop(1, "rgba(255,255,255,0.05)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.45)"; ctx.stroke();
+      });
+      hud(ctx, ["Bubble Pop", `Score: ${bubble.score}`, `Aika: ${Math.max(0, Math.ceil(bubble.time))}`], "#64dfdf");
+      if (bubble.over) centerMessage(ctx, w, h, "Aika loppui!", `Pisteet: ${bubble.score}. Paina Käynnistä uudelleen.`, "#64dfdf");
+    }
+
+    // -------- Aim Trainer --------
+    let target = {};
+    function targetReset() {
+      target = { x: 260, y: 200, r: 34, score: 0, hits: 0, miss: 0, time: 45, over: false };
+    }
+    function targetNew(w, h) {
+      target.r = 18 + Math.random() * 32;
+      target.x = 55 + Math.random() * (w - 110);
+      target.y = 85 + Math.random() * (h - 140);
+    }
+    function targetClick(x, y, w, h) {
+      if (target.over) return;
+      if (Math.hypot(x - target.x, y - target.y) <= target.r) {
+        target.hits++; target.score += Math.floor(120 - target.r * 1.8); targetNew(w, h);
+      } else {
+        target.miss++;
+      }
+    }
+    safeOn(gameCanvasEl, "pointerdown", (e) => {
+      if (activeGameKey !== "target") return;
+      const rect = gameCanvasEl.getBoundingClientRect();
+      targetClick(e.clientX - rect.left, e.clientY - rect.top, rect.width, rect.height);
+    });
+    function targetUpdate(ctx, w, h, dt) {
+      if (!target.r) targetReset();
+      gameBackdrop(ctx, w, h, ["#ff006e", "#f8d14a"]);
+      if (!target.over) { target.time -= dt; if (target.time <= 0) target.over = true; }
+      ctx.save();
+      ctx.shadowColor = "#ff006e"; ctx.shadowBlur = 26;
+      ctx.fillStyle = "#ff006e"; ctx.beginPath(); ctx.arc(target.x, target.y, target.r, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(target.x, target.y, target.r * 0.64, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(target.x, target.y, target.r * 0.28, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+      const acc = target.hits + target.miss ? Math.round(target.hits / (target.hits + target.miss) * 100) : 100;
+      hud(ctx, ["Aim Trainer", `Score: ${target.score}`, `Osumat: ${target.hits}`, `Tarkkuus: ${acc}%`, `Aika: ${Math.max(0, Math.ceil(target.time))}`], "#ff006e");
+      if (target.over) centerMessage(ctx, w, h, "Harjoitus valmis!", `Pisteet: ${target.score}, tarkkuus ${acc}%.`, "#ff006e");
     }
 
     // ----------------------------
