@@ -1069,6 +1069,131 @@
         border-radius: 15px;
       }
 
+      /* Puhelinpeleissä ei ole pystyskrollia: kaikki mahtuu yhteen ruutuun. */
+      #gamesApp {
+        overflow: hidden;
+      }
+
+      #gamesApp .app-header {
+        flex: 0 0 auto;
+        padding: calc(4px + env(safe-area-inset-top, 0px)) 7px 4px;
+      }
+
+      #gamesApp .app-header .dim {
+        display: none;
+      }
+
+      #gamesApp .app-header h2 {
+        font-size: 14px;
+        margin: 0;
+      }
+
+      #gamesApp .app-header .secondary-btn {
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+
+      #gamesApp .app-main {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+
+      #gamesApp .app-sidebar {
+        flex: 0 0 44px;
+        min-height: 44px;
+        height: 44px;
+        padding: 4px 5px;
+        overflow: hidden;
+      }
+
+      #gamesApp #standaloneGameList {
+        height: 36px;
+        gap: 5px;
+      }
+
+      #gamesApp #standaloneGameList .list-item {
+        min-width: 116px;
+        min-height: 36px;
+        height: 36px;
+        padding: 4px 6px;
+        border-radius: 11px;
+      }
+
+      #gamesApp #standaloneGameList .avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 13px;
+      }
+
+      #gamesApp #standaloneGameList .list-item .title {
+        font-size: 10px;
+      }
+
+      #gamesApp .app-content {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow: hidden;
+        padding: 4px;
+      }
+
+      #gamesApp #standaloneGameMount {
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #gamesApp #standaloneGameMount #gamePane {
+        min-height: 0;
+        height: 100%;
+        gap: 4px;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #gamesApp .game-top {
+        flex: 0 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 6px;
+        border-radius: 12px;
+      }
+
+      #gamesApp .game-title {
+        font-size: 12px;
+        line-height: 1.05;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #gamesApp .game-hint {
+        display: none;
+      }
+
+      #gamesApp .game-top .row {
+        flex-wrap: nowrap;
+        gap: 4px;
+      }
+
+      #gamesApp #gameStartBtn,
+      #gamesApp #gameStopBtn {
+        min-width: 52px !important;
+        padding: 6px 7px !important;
+        font-size: 9px;
+        line-height: 1;
+      }
+
+      #gamesApp #gameCanvas {
+        flex: 1 1 0;
+        min-height: 0;
+        height: 100%;
+        max-height: none;
+        border-radius: 12px;
+        display: block;
+      }
+
       .music-toggle {
         right: 8px;
         bottom: calc(8px + env(safe-area-inset-bottom, 0px));
